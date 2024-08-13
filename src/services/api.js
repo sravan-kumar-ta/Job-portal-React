@@ -11,10 +11,16 @@ api.interceptors.response.use(
    (response) => response,
    async (error) => {
       const originalRequest = error.config;
+
+      if (originalRequest.skipInterceptor) {
+         return Promise.reject(error);
+      }
+
       if (error.response.status === 401 && !originalRequest._retry) {
+         console.log("Token Refreshing...");
          originalRequest._retry = true;
          try {
-            const { data } = await api.post("account/token/refresh/", {
+            const { data } = await api.post("auth/token/refresh/", {
                refresh_token: localStorage.getItem("refresh_token"),
             });
             localStorage.setItem("access_token", data.access_token);

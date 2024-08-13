@@ -1,36 +1,85 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useLogin } from "../services/authService";
+import { Form, Formik } from "formik";
+import InputField from "../components/InputField";
+import SubmitButton from "../components/SubmitButton";
+import { loginValidationSchema } from "../utils/validationSchemas";
 
 const LoginForm = () => {
    const login = useLogin();
    const navigate = useNavigate();
+   const location = useLocation();
+   const username = location.state?.username || "";
+   const [errorMessage, setErrorMessage] = useState("");
 
-   const handleSubmit = async (e) => {
-      e.preventDefault();
-      const username = e.target.username.value;
-      const password = e.target.password.value;
+   const initialValues = {
+      username: username,
+      password: "",
+   };
 
-      try {
-         await login.mutateAsync({ username, password });
+   const handleSubmit = async (values) => {
+      setErrorMessage("");
+      const response = await login.mutateAsync(values);
+      if (response?.status && response.status === "success") {
          navigate("/");
-      } catch (error) {
-         console.error("Login failed:", error);
+      } else {
+         setErrorMessage(response.data.detail);
       }
    };
 
+   useEffect(() => {
+      if (username) {
+         document.getElementsByName("password")[0].focus();
+      } else {
+         document.getElementsByName("username")[0].focus();
+      }
+   }, [username]);
    return (
-      <form onSubmit={handleSubmit}>
-         <div>
-            <label>Email:</label>
-            <input type="text" name="username" required />
+      <div className="bg-gray-100 min-h-screen">
+         <div className="pt-16">
+            <Formik
+               initialValues={initialValues}
+               validationSchema={loginValidationSchema}
+               onSubmit={handleSubmit}
+            >
+               {({ isSubmitting, touched, errors }) => (
+                  <Form className="max-w-sm mx-auto p-16 pt-6 bg-white rounded shadow-md mt-10">
+                     <h1 className="text-center text-2xl my-4 font-bold">
+                        SignIn
+                     </h1>
+                     <hr />
+                     <InputField
+                        name="username"
+                        label="Username"
+                        touched={touched}
+                        errors={errors}
+                     />
+                     <InputField
+                        type="password"
+                        name="password"
+                        label="Password"
+                        touched={touched}
+                        errors={errors}
+                     />
+
+                     {errorMessage && (
+                        <div className="text-red-500 text-center my-2">
+                           {errorMessage}
+                        </div>
+                     )}
+
+                     <div className="flex items-center justify-between">
+                        <SubmitButton
+                           isSubmitting={isSubmitting}
+                           text="Login"
+                        />
+                     </div>
+                  </Form>
+               )}
+            </Formik>
          </div>
-         <div>
-            <label>Password:</label>
-            <input type="password" name="password" required />
-         </div>
-         <button type="submit">Login</button>
-      </form>
+      </div>
    );
 };
 

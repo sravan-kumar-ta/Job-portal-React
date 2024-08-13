@@ -1,77 +1,166 @@
-import React from "react";
 import { useRegister } from "../services/authService";
 import { useNavigate } from "react-router-dom";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import { registerValidationSchema } from "../utils/validationSchemas";
+import InputField from "../components/InputField";
+import SubmitButton from "../components/SubmitButton";
+
+const initialValues = {
+   firstName: "",
+   lastName: "",
+   username: "",
+   email: "",
+   password: "",
+   confirmPassword: "",
+   role: "job_seeker",
+};
 
 const Register = () => {
    const { mutateAsync: register } = useRegister();
    const navigate = useNavigate();
 
-   const handleSubmit = async (e) => {
-      e.preventDefault();
-      const username = e.target.username.value;
-      const email = e.target.email.value;
-      const password = e.target.password.value;
-      const confirmPassword = e.target.confirmPassword.value;
-      const role = e.target.role.value;
-      const firstName = e.target.firstName.value;
-      const lastName = e.target.lastName.value;
+   const handleSubmit = async (
+      values,
+      { setSubmitting, resetForm, setFieldError }
+   ) => {
+      const { status, data } = await register({
+         first_name: values.firstName,
+         last_name: values.lastName,
+         username: values.username,
+         email: values.email,
+         password: values.password,
+         role: values.role,
+      });
 
-      if (password !== confirmPassword) {
-         alert("Passwords do not match!");
-         return;
+      if (status === "success") {
+         resetForm();
+         navigate("/login", { state: { username: values.username } });
+      } else if (status === "error") {
+         if (typeof data === "object") {
+            Object.keys(data).forEach((field) => {
+               setFieldError(field, data[field][0]);
+            });
+         } else {
+            setFieldError("general", data);
+         }
       }
 
-      try {
-         await register({
-            username,
-            email,
-            password,
-            role,
-            first_name: firstName,
-            last_name: lastName,
-         });
-         navigate("/login");
-      } catch (error) {
-         console.error("Registration failed:", error);
-      }
+      setSubmitting(false);
    };
 
    return (
-      <form onSubmit={handleSubmit}>
-         <div>
-            <label>Username:</label>
-            <input type="text" name="username" required />
+      <div className="bg-gray-100 min-h-screen">
+         <div className="pt-1">
+            <Formik
+               initialValues={initialValues}
+               validationSchema={registerValidationSchema}
+               onSubmit={handleSubmit}
+            >
+               {({ isSubmitting, touched, errors }) => (
+                  <Form className="max-w-md mx-auto p-6 pt-1 bg-white rounded shadow-md mt-10">
+                     <h1 className="text-center text-2xl my-4 font-bold">
+                        SignUp
+                     </h1>
+                     <hr />
+                     <div className="flex space-x-4 mt-2">
+                        <div className="w-1/2">
+                           <InputField
+                              name="firstName"
+                              label="First Name"
+                              touched={touched}
+                              errors={errors}
+                           />
+                        </div>
+                        <div className="w-1/2">
+                           <InputField
+                              name="lastName"
+                              label="Last Name"
+                              touched={touched}
+                              errors={errors}
+                           />
+                        </div>
+                     </div>
+                     <InputField
+                        name="username"
+                        label="Username"
+                        touched={touched}
+                        errors={errors}
+                     />
+                     <InputField
+                        name="email"
+                        label="Email"
+                        type="email"
+                        touched={touched}
+                        errors={errors}
+                     />
+
+                     <div className="mb-4">
+                        <label
+                           htmlFor="role"
+                           className="block text-gray-700 font-bold mb-2"
+                        >
+                           Role
+                        </label>
+                        <Field
+                           as="select"
+                           name="role"
+                           id="role"
+                           className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 ${
+                              touched.role && errors.role
+                                 ? "border-red-500"
+                                 : touched.role
+                                 ? "border-green-500"
+                                 : "border-gray-300"
+                           }`}
+                        >
+                           <option value="job_seeker">Job Seeker</option>
+                           <option value="company">Company</option>
+                           <option value="admin">Admin</option>
+                        </Field>
+                        <ErrorMessage
+                           name="role"
+                           component="div"
+                           className="text-red-500 text-sm mt-1"
+                        />
+                     </div>
+                     <div className="flex space-x-4 mt-2">
+                        <div className="w-1/2">
+                           <InputField
+                              name="password"
+                              label="Password"
+                              type="password"
+                              touched={touched}
+                              errors={errors}
+                           />
+                        </div>
+                        <div className="w-1/2">
+                           <InputField
+                              name="confirmPassword"
+                              label="Confirm Password"
+                              type="password"
+                              touched={touched}
+                              errors={errors}
+                           />
+                        </div>
+                     </div>
+                     <div className="flex items-center justify-between">
+                        <SubmitButton
+                           isSubmitting={isSubmitting}
+                           text="Signup"
+                        />
+                     </div>
+
+                     {/* Display general form error if exists */}
+                     {errors.general && (
+                        <div className="text-red-500 text-center mt-2">
+                           {errors.general}
+                        </div>
+                     )}
+                  </Form>
+               )}
+            </Formik>
          </div>
-         <div>
-            <label>Email:</label>
-            <input type="email" name="email" required />
-         </div>
-         <div>
-            <label>Password:</label>
-            <input type="password" name="password" required />
-         </div>
-         <div>
-            <label>Confirm Password:</label>
-            <input type="password" name="confirmPassword" required />
-         </div>
-         <div>
-            <label>Role:</label>
-            <select name="role" required>
-               <option value="job_seeker">Job Seeker</option>
-               <option value="company">Company</option>
-               <option value="admin">Admin</option>
-            </select>
-         </div>
-         <div>
-            <label>First Name:</label>
-            <input type="text" name="firstName" required />
-         </div>
-         <div>
-            <label>Last Name:</label>
-            <input type="text" name="lastName" required />
-         </div>
-         <button type="submit">Register</button>
-      </form>
+      </div>
    );
 };
 
