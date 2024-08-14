@@ -22,7 +22,14 @@ const LoginForm = () => {
       setErrorMessage("");
       const response = await login.mutateAsync(values);
       if (response?.status && response.status === "success") {
-         navigate("/");
+         const role = response.user?.role;
+         if (role === "admin") {
+            navigate("/admin-profile");
+         } else if (role === "company") {
+            navigate("/company-profile");
+         } else {
+            navigate("/joblist");
+         }
       } else {
          setErrorMessage(response.data.detail);
       }
