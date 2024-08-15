@@ -1,8 +1,8 @@
 import React from "react";
-import { MdCurrencyRupee } from "react-icons/md";
-import { FaLocationDot } from "react-icons/fa6";
 import { FaRegBuilding } from "react-icons/fa";
 import { MdCalendarMonth } from "react-icons/md";
+import { GiMoneyStack } from "react-icons/gi";
+import { FaLocationDot } from "react-icons/fa6";
 
 const JobCard = ({
    type = "Full-Time",
@@ -12,6 +12,7 @@ const JobCard = ({
    salary = "₹5,00,000 - ₹10,00,000",
    location = "Bangalore, India",
    description = "We are looking for a talented software developer to join our team.",
+   btn_text = "Apply",
 }) => {
    const excerpt = (text, length) => {
       if (text.length <= length) return text;
@@ -40,7 +41,7 @@ const JobCard = ({
          </div>
 
          <div className="flex items-center ml-4">
-            <MdCurrencyRupee className="text-gray-700 mr-1" />
+            <GiMoneyStack className="text-gray-700 mr-1" />
             <p className="text-gray-500">{salary}</p>
          </div>
          <div className="flex items-center ml-4 mb-2">
@@ -52,13 +53,16 @@ const JobCard = ({
          <section className="px-4 pb-4 mt-2">
             <p className="text-gray-700">
                {excerpt(description, 75)}
-               <a href="" className="text-blue-600 hover:text-blue-800"> Read more...</a>
+               <a href="" className="text-blue-600 hover:text-blue-800">
+                  {" "}
+                  Read more...
+               </a>
             </p>
          </section>
 
          <footer className="px-4 py-2 bg-gray-100 border-t border-gray-200 text-center">
             <button className="bg-blue-600 text-white text-sm font-semibold py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300">
-               Apply Now
+               {btn_text}
             </button>
          </footer>
       </div>

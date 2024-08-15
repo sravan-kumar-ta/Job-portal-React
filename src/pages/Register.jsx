@@ -115,7 +115,6 @@ const Register = () => {
                         >
                            <option value="job_seeker">Job Seeker</option>
                            <option value="company">Company</option>
-                           <option value="admin">Admin</option>
                         </Field>
                         <ErrorMessage
                            name="role"

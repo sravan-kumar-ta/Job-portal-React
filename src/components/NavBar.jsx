@@ -27,7 +27,7 @@ const NavBar = () => {
                   href="#"
                   className="text-white hover:bg-gray-700 px-3 py-2 rounded bg-gray-900 mx-1 md:mx-5"
                >
-                  Services
+                  Profile
                </a>
                <button
                   onClick={handleLogout}

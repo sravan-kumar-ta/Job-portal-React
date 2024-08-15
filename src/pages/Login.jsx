@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useLogin } from "../services/authService";
+import { useLogin, useLogout } from "../services/authService";
 import { Form, Formik } from "formik";
+import { loginValidationSchema } from "../utils/validationSchemas";
 import InputField from "../components/InputField";
 import SubmitButton from "../components/SubmitButton";
-import { loginValidationSchema } from "../utils/validationSchemas";
 
 const LoginForm = () => {
    const login = useLogin();
+   const logout = useLogout();
    const navigate = useNavigate();
    const location = useLocation();
    const username = location.state?.username || "";
@@ -24,11 +25,13 @@ const LoginForm = () => {
       if (response?.status && response.status === "success") {
          const role = response.user?.role;
          if (role === "admin") {
-            navigate("/admin-profile");
+            navigate("/dashboard");
          } else if (role === "company") {
             navigate("/company-profile");
-         } else {
+         } else if (role === "job_seeker") {
             navigate("/joblist");
+         } else {
+            logout();
          }
       } else {
          setErrorMessage(response.data.detail);

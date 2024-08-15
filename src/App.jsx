@@ -7,10 +7,10 @@ import {
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import LoginForm from "./pages/Login";
-import AdminProfile from "./pages/Admin/AdminProfile";
 import CompanyProile from "./pages/Company/CompanyProfile";
 import JobList from "./pages/JobSeeker/JobList";
 import NavBar from "./components/NavBar";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
 
 function App() {
    return (
@@ -21,7 +21,7 @@ function App() {
                <Route path="/register" element={<Register />} />
                <Route path="/login" element={<LoginForm />} />
 
-               <Route path="/admin-profile" element={<AdminProfile />} />
+               <Route path="/dashboard" element={<AdminDashboard />} />
                <Route path="/company-profile" element={<CompanyProile />} />
                <Route path="/joblist" element={<JobList />} />
             </Routes>
