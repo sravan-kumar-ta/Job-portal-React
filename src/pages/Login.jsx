@@ -5,6 +5,7 @@ import { Form, Formik } from "formik";
 import { loginValidationSchema } from "../utils/validationSchemas";
 import InputField from "../components/InputField";
 import SubmitButton from "../components/SubmitButton";
+import { useAuth } from "../context/AuthContext";
 
 const LoginForm = () => {
    const login = useLogin();
@@ -13,6 +14,7 @@ const LoginForm = () => {
    const location = useLocation();
    const username = location.state?.username || "";
    const [errorMessage, setErrorMessage] = useState("");
+   const { role, updateRole } = useAuth();
 
    const initialValues = {
       username: username,
@@ -24,8 +26,10 @@ const LoginForm = () => {
       const response = await login.mutateAsync(values);
       if (response?.status && response.status === "success") {
          const role = response.user?.role;
+         updateRole(role);
+         console.log("role is", role);
          if (role === "admin") {
-            navigate("/dashboard");
+            navigate("/");
          } else if (role === "company") {
             navigate("/company-profile");
          } else if (role === "job_seeker") {

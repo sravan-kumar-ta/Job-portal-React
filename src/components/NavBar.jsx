@@ -1,7 +1,8 @@
+import { NavLink } from "react-router-dom";
 import { useLogout } from "../services/authService";
 
 const NavBar = () => {
-   const { mutateAsync: logout } = useLogout(); 
+   const { mutateAsync: logout } = useLogout();
 
    const handleLogout = () => {
       logout();
@@ -12,17 +13,27 @@ const NavBar = () => {
          <div className="container flex items-center justify-center">
             <div className="flex-col">
                <a
-                  href="#"
+                  href="/"
                   className="text-white hover:bg-gray-700 px-3 py-2 rounded bg-gray-900 mx-1 md:mx-5"
                >
                   Home
                </a>
-               <a
-                  href="#"
-                  className="text-white hover:bg-gray-700 px-3 py-2 rounded bg-gray-900 mx-1 md:mx-5"
+               <NavLink
+                  to="/"
+                  className={
+                     "text-white hover:bg-gray-700 px-3 py-2 rounded bg-gray-900 mx-1 md:mx-5"
+                  }
                >
-                  About
-               </a>
+                  Home
+               </NavLink>
+               <NavLink
+                  to="/dashboard"
+                  className={
+                     "text-white hover:bg-gray-700 px-3 py-2 rounded bg-gray-900 mx-1 md:mx-5"
+                  }
+               >
+                  Dashboard
+               </NavLink>
                <a
                   href="#"
                   className="text-white hover:bg-gray-700 px-3 py-2 rounded bg-gray-900 mx-1 md:mx-5"

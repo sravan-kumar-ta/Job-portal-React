@@ -7,26 +7,34 @@ import {
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import LoginForm from "./pages/Login";
-import CompanyProile from "./pages/Company/CompanyProfile";
-import JobList from "./pages/JobSeeker/JobList";
 import NavBar from "./components/NavBar";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
    return (
-      <Router>
-         <ConditionalNavBar>
-            <Routes>
-               <Route path="/" element={<Home />} />
-               <Route path="/register" element={<Register />} />
-               <Route path="/login" element={<LoginForm />} />
+      <AuthProvider>
+         <Router>
+            <ConditionalNavBar>
+               <Routes>
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/login" element={<LoginForm />} />
 
-               <Route path="/dashboard" element={<AdminDashboard />} />
-               <Route path="/company-profile" element={<CompanyProile />} />
-               <Route path="/joblist" element={<JobList />} />
-            </Routes>
-         </ConditionalNavBar>
-      </Router>
+                  <Route
+                     path="/dashboard"
+                     element={
+                        <ProtectedRoute
+                           element={<AdminDashboard />}
+                           requiredRole={"admin"}
+                        />
+                     }
+                  />
+                  <Route path="/" element={<Home />} />
+               </Routes>
+            </ConditionalNavBar>
+         </Router>
+      </AuthProvider>
    );
 }
 

@@ -1,20 +1,29 @@
 import { configureAuth } from "react-query-auth";
-import { api } from "./api";
+import { axiosInstance } from "./api";
 
 const { useUser, useLogin, useRegister, useLogout } = configureAuth({
    userFn: async () => {
-      return await api.get("/auth/user/");
+      const token = localStorage.getItem("access_token");
+      if (!token) throw new Error("No access token found");
+
+      const response = await axiosInstance.get("/auth/user/", {
+         headers: {
+            Authorization: `Bearer ${token}`,
+         },
+      });
+
+      return response.data;
    },
    loginFn: async (credentials) => {
       try {
-         const { data } = await api.post("/auth/login/", credentials, {
+         const { data } = await axiosInstance.post("/auth/login/", credentials, {
             skipInterceptor: true,
          });
          const { access, refresh, user } = data;
 
          localStorage.setItem("access_token", access);
          localStorage.setItem("refresh_token", refresh);
-         api.defaults.headers.common["Authorization"] = `Bearer ${access}`;
+         axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${access}`;
          return { status: "success", user };
       } catch (error) {
          if (error.response?.data) {
@@ -31,7 +40,7 @@ const { useUser, useLogin, useRegister, useLogout } = configureAuth({
    },
    registerFn: async (credentials) => {
       try {
-         const { data } = await api.post("/auth/register/", credentials);
+         const { data } = await axiosInstance.post("/auth/register/", credentials);
          return { status: "success", data };
       } catch (error) {
          if (error.response?.status === 400) {
