@@ -8,13 +8,14 @@ import SubmitButton from "../components/SubmitButton";
 import { useAuth } from "../context/AuthContext";
 
 const LoginForm = () => {
-   const login = useLogin();
-   const logout = useLogout();
+   const [errorMessage, setErrorMessage] = useState("");
+   const { mutateAsync: login } = useLogin();
+   const { mutateAsync: logout} = useLogout();
+   const { updateRole } = useAuth(); 
    const navigate = useNavigate();
+
    const location = useLocation();
    const username = location.state?.username || "";
-   const [errorMessage, setErrorMessage] = useState("");
-   const { role, updateRole } = useAuth();
 
    const initialValues = {
       username: username,
@@ -23,17 +24,18 @@ const LoginForm = () => {
 
    const handleSubmit = async (values) => {
       setErrorMessage("");
-      const response = await login.mutateAsync(values);
+
+      const response = await login(values);
       if (response?.status && response.status === "success") {
          const role = response.user?.role;
          updateRole(role);
-         console.log("role is", role);
+
          if (role === "admin") {
-            navigate("/");
+            navigate("/dashboard");
          } else if (role === "company") {
             navigate("/company-profile");
          } else if (role === "job_seeker") {
-            navigate("/joblist");
+            navigate("/");
          } else {
             logout();
          }
@@ -49,6 +51,7 @@ const LoginForm = () => {
          document.getElementsByName("username")[0].focus();
       }
    }, [username]);
+   
    return (
       <div className="bg-gray-100 min-h-screen">
          <div className="pt-16">

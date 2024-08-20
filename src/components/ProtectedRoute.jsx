@@ -1,7 +1,7 @@
 import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import { useUser } from "../services/authService";
 import { useEffect, useState } from "react";
+import { useUser } from "../services/authService";
+import { useAuth } from "../context/AuthContext";
 
 const ProtectedRoute = ({ element: Component, requiredRole, ...rest }) => {
    const { role, updateRole } = useAuth();

@@ -1,5 +1,6 @@
 import React from "react";
 import { FaUser, FaBuilding, FaUserCog } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
 
 const AdminDashboard = ({
    jobSeekersCount = 120,
@@ -36,9 +37,9 @@ const AdminDashboard = ({
                      </p>
                   </div>
                   <div className="flex items-end justify-end">
-                     <button className="border border-blue-600 text-blue-600 text-sm font-semibold py-2 px-4 rounded hover:bg-blue-600 hover:text-white transition-colors duration-300">
+                     <NavLink to={"/update-admin"} className="border border-blue-600 text-blue-600 text-sm font-semibold py-2 px-4 rounded hover:bg-blue-600 hover:text-white transition-colors duration-300">
                         Update
-                     </button>
+                     </NavLink>
                   </div>
                </div>
             </div>
@@ -57,9 +58,12 @@ const AdminDashboard = ({
                      <p className="text-gray-600 text-lg">
                         {jobSeekersCount} registered
                      </p>
-                     <button className="border border-blue-600 text-blue-600 text-sm font-semibold py-2 px-4 rounded hover:bg-blue-600 hover:text-white transition-colors duration-300">
+                     <NavLink
+                        to={"job-seekers"}
+                        className="border border-blue-600 text-blue-600 text-sm font-semibold py-2 px-4 rounded hover:bg-blue-600 hover:text-white transition-colors duration-300"
+                     >
                         View all
-                     </button>
+                     </NavLink>
                   </div>
                </div>
 

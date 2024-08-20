@@ -54,14 +54,15 @@ const { useUser, useLogin, useRegister, useLogout } = configureAuth({
    },
    logoutFn: async () => {
       try {
-         const refreshToken = localStorage.getItem("refreshToken");
-         await axios.post("/auth/logout/", { refresh: refreshToken });
-         console.log("Logout successfully.");
+         await axiosInstance.post('/auth/logout/', {
+           refresh: localStorage.getItem('refresh_token')
+         });
       } catch (error) {
          console.error("Logout failed", error);
       } finally {
          localStorage.removeItem("access_token");
          localStorage.removeItem("refresh_token");
+         console.log("Logout successfully.");
 
          window.location.href = "/login";
       }

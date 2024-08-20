@@ -11,6 +11,10 @@ import NavBar from "./components/NavBar";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
+import JobSeekers from "./pages/Admin/JobSeekers";
+import UpdateAdmin from "./pages/Admin/UpdateAdmin";
+import CompanyProfile from "./pages/Company/CompanyProfile";
+import UpdateJobSeeker from "./pages/JobSeeker/UpdateJobSeeker";
 
 function App() {
    return (
@@ -18,6 +22,7 @@ function App() {
          <Router>
             <ConditionalNavBar>
                <Routes>
+                  <Route path="/" element={<Home />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/login" element={<LoginForm />} />
 
@@ -30,7 +35,12 @@ function App() {
                         />
                      }
                   />
-                  <Route path="/" element={<Home />} />
+                  <Route path="/dashboard/job-seekers" element={<JobSeekers />} />
+                  <Route path="/update-admin" element={<UpdateAdmin />} />
+                  
+
+                  <Route path="/update-profile" element={<UpdateJobSeeker />} />
+                  <Route path="/company/profile" element={<CompanyProfile />} />
                </Routes>
             </ConditionalNavBar>
          </Router>
