@@ -31,7 +31,7 @@ const LoginForm = () => {
          updateRole(role);
 
          if (role === "admin") {
-            navigate("/dashboard");
+            navigate("/admin/dashboard");
          } else if (role === "company") {
             navigate("/company-profile");
          } else if (role === "job_seeker") {

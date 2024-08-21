@@ -1,49 +1,26 @@
-import {
-   BrowserRouter as Router,
-   Route,
-   Routes,
-   useLocation,
-} from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import NavBar from "./components/NavBar";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import LoginForm from "./pages/Login";
-import NavBar from "./components/NavBar";
-import AdminDashboard from "./pages/Admin/AdminDashboard";
-import ProtectedRoute from "./components/ProtectedRoute";
-import { AuthProvider } from "./context/AuthContext";
-import JobSeekers from "./pages/Admin/JobSeekers";
-import UpdateAdmin from "./pages/Admin/UpdateAdmin";
-import CompanyProfile from "./pages/Company/CompanyProfile";
-import UpdateJobSeeker from "./pages/JobSeeker/UpdateJobSeeker";
+import AdminRoutes from "./routes/AdminRoutes";
+import JobSeekerRoutes from "./routes/JobSeekerRoutes";
 
 function App() {
    return (
       <AuthProvider>
-         <Router>
+         <BrowserRouter>
             <ConditionalNavBar>
                <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/login" element={<LoginForm />} />
-
-                  <Route
-                     path="/dashboard"
-                     element={
-                        <ProtectedRoute
-                           element={<AdminDashboard />}
-                           requiredRole={"admin"}
-                        />
-                     }
-                  />
-                  <Route path="/dashboard/job-seekers" element={<JobSeekers />} />
-                  <Route path="/update-admin" element={<UpdateAdmin />} />
-                  
-
-                  <Route path="/update-profile" element={<UpdateJobSeeker />} />
-                  <Route path="/company/profile" element={<CompanyProfile />} />
+                  <Route path="admin/*" element={<AdminRoutes />} />
+                  <Route path="job_seeker/*" element={<JobSeekerRoutes />} />
                </Routes>
             </ConditionalNavBar>
-         </Router>
+         </BrowserRouter>
       </AuthProvider>
    );
 }

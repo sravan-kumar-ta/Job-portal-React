@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
-import { registerValidationSchema } from "../../utils/validationSchemas";
-import { useUser } from "../../services/authService";
-import InputField from "../../components/InputField";
-import SubmitButton from "../../components/SubmitButton";
+import { registerValidationSchema } from "../utils/validationSchemas";
+import { useUser } from "../services/authService";
+import InputField from "../components/InputField";
+import SubmitButton from "../components/SubmitButton";
 
 const UpdateJobSeeker = () => {
    const { data: user, error, isLoading } = useUser();

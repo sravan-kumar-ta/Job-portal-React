@@ -14,10 +14,10 @@ const NavBar = () => {
 
    if (role) {
       if (role === "admin") {
-         links.push({ href: "/dashboard", text: "Dashboard" });
-         links.push({ href: "/dashboard", text: "Dashboard" });
+         links.push({ href: "admin/dashboard", text: "Dashboard" });
+         links.push({ href: "admin/dashboard/update-admin", text: "Update" });
       } else if (role === "job_seeker") {
-         links.push({ href: "/update-profile", text: "Profile" });
+         links.push({ href: "job_seeker/profile", text: "Profile" });
          links.push({ href: "/update-profile", text: "Profile" });
       } else if (role === "company") {
          links.push({ href: "/company/jobs", text: "My Jobs" });
