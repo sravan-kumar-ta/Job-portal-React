@@ -3,15 +3,14 @@ import React, { createContext, useContext, useState } from "react";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-   const [role, setRole] = useState(null);
+   const [user, setUser] = useState(null);
 
-   const updateRole = (newRole) => {
-      setRole(newRole);
-      console.log("User role is updating in AuthContext.jsx & Role:", newRole);
+   const updateUser = (newUser) => {
+      setUser(newUser);
    };
 
    return (
-      <AuthContext.Provider value={{ role, updateRole }}>
+      <AuthContext.Provider value={{ user, updateUser }}>
          {children}
       </AuthContext.Provider>
    );

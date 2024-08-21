@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
 import { registerValidationSchema } from "../utils/validationSchemas";
-import { useUser } from "../services/authService";
 import InputField from "../components/InputField";
 import SubmitButton from "../components/SubmitButton";
+import { useAuth } from "../context/AuthContext";
 
-const UpdateJobSeeker = () => {
-   const { data: user, error, isLoading } = useUser();
+const UpdateUser = () => {
+   const { user } = useAuth();
    const [initialValues, setInitialValues] = useState({
       firstName: "",
       lastName: "",
@@ -16,7 +16,6 @@ const UpdateJobSeeker = () => {
 
    useEffect(() => {
       if (user) {
-         console.log(user.first_name);
          setInitialValues({
             firstName: user.first_name || "",
             lastName: user.last_name || "",
@@ -27,14 +26,6 @@ const UpdateJobSeeker = () => {
    }, [user]);
 
    const handleSubmit = (values) => {};
-
-   if (isLoading) {
-      return <div>Loading...</div>;
-   }
-
-   if (error) {
-      return <h2>{error.message || "An error occurred"}</h2>;
-   }
 
    return (
       <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-4">
@@ -82,4 +73,4 @@ const UpdateJobSeeker = () => {
    );
 };
 
-export default UpdateJobSeeker;
+export default UpdateUser;

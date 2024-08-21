@@ -11,7 +11,7 @@ const LoginForm = () => {
    const [errorMessage, setErrorMessage] = useState("");
    const { mutateAsync: login } = useLogin();
    const { mutateAsync: logout} = useLogout();
-   const { updateRole } = useAuth(); 
+   const { updateUser } = useAuth(); 
    const navigate = useNavigate();
 
    const location = useLocation();
@@ -28,7 +28,7 @@ const LoginForm = () => {
       const response = await login(values);
       if (response?.status && response.status === "success") {
          const role = response.user?.role;
-         updateRole(role);
+         updateUser(response.user);
 
          if (role === "admin") {
             navigate("/admin/dashboard");

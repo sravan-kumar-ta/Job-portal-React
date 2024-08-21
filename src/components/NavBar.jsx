@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 
 const NavBar = () => {
    const { mutateAsync: logout } = useLogout();
-   const { role } = useAuth();
+   const { user } = useAuth();
 
    const handleLogout = () => {
       logout();
@@ -12,6 +12,7 @@ const NavBar = () => {
 
    let links = [{ href: "/", text: "Home" }];
 
+   const role = user?.role;
    if (role) {
       if (role === "admin") {
          links.push({ href: "admin/dashboard", text: "Dashboard" });
