@@ -1,5 +1,5 @@
 import { configureAuth } from "react-query-auth";
-import { axiosInstance } from "./api";
+import { axiosInstance } from "./_axiosInstance";
 
 const { useUser, useLogin, useRegister, useLogout } = configureAuth({
    userFn: async () => {

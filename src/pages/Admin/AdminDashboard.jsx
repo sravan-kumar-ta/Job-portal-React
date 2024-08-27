@@ -1,14 +1,14 @@
 import React from "react";
 import { FaUser, FaBuilding, FaUserCog } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
-const AdminDashboard = ({
-   jobSeekersCount = 120,
-   companiesCount = 45,
-   adminName = "Admin Name",
-   adminEmail = "admin@example.com",
-   username = "admin.username",
-}) => {
+const AdminDashboard = () => {
+   const { user } = useAuth();
+
+   const jobSeekersCount = 120;
+   const companiesCount = 45;
+
    return (
       <div className="p-6 bg-gray-100 min-h-screen">
          <div className="md:w-2/5 mx-auto">
@@ -27,17 +27,20 @@ const AdminDashboard = ({
                <div className="flex flex-col md:flex-row justify-between">
                   <div>
                      <p className="text-gray-600 text-lg mb-2">
-                        Full Name: {adminName}
+                        <strong>Full Name:</strong> {user.get_full_name}
                      </p>
                      <p className="text-gray-600 text-lg mb-2">
-                        Username: {username}
+                        <strong>Username:</strong> {user.username}
                      </p>
                      <p className="text-gray-600 text-lg mb-2">
-                        Email: {adminEmail}
+                        <strong>Email:</strong> {user.email}
                      </p>
                   </div>
                   <div className="flex items-end justify-end">
-                     <NavLink to={"update-admin"} className="border border-blue-600 text-blue-600 text-sm font-semibold py-2 px-4 rounded hover:bg-blue-600 hover:text-white transition-colors duration-300">
+                     <NavLink
+                        to={"update-admin"}
+                        className="border border-blue-600 text-blue-600 text-sm font-semibold py-2 px-4 rounded hover:bg-blue-600 hover:text-white transition-colors duration-300"
+                     >
                         Update
                      </NavLink>
                   </div>

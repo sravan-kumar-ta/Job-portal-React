@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
-import AdminDashboard from "../pages/Admin/AdminDashboard";
 import ProtectedRoute from "../components/ProtectedRoute";
+import AdminDashboard from "../pages/Admin/AdminDashboard";
 import UpdateUser from "../pages/UpdateUser";
 import JobSeekers from "../pages/Admin/JobSeekers";
 
