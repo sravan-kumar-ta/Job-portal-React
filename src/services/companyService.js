@@ -1,11 +1,17 @@
+import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "./_axiosInstance";
 
-export const fetchUserCompany = async () => {
+const fetchUserCompany = async () => {
    const response = await axiosInstance.get("company/user-company/");
    return response.data;
 };
 
-export const updateUserCompany = async (companyData) => {
+const fetchJobList = async () => {
+   const response = await axiosInstance.get("company/jobs/");
+   return response.data;
+};
+
+const updateUserCompany = async (companyData) => {
    const response = await axiosInstance.patch(
       "company/user-company/",
       companyData
@@ -13,7 +19,28 @@ export const updateUserCompany = async (companyData) => {
    return response.data;
 };
 
-export const fetchJobList = async () => {
-   const response = await axiosInstance.get("company/jobs/");
-   return response.data;
+// Hooks -----
+
+const useFecthUserCompany = () => {
+   return useQuery({
+      queryKey: ["userCompany"],
+      queryFn: fetchUserCompany,
+      staleTime: 5 * 60 * 1000,
+   });
 };
+
+const useFetchJobsQuery = () => {
+   return useQuery({
+      queryKey: ["jobs"],
+      queryFn: fetchJobList,
+      staleTime: 5 * 60 * 1000,
+   });
+};
+
+export { useFetchJobsQuery, useFecthUserCompany };
+
+// useFetchJobsQuery
+// useFetchJobQuery
+// useAddJobMutation
+// useUpdateJobMutation
+// useDeleteJobMutation

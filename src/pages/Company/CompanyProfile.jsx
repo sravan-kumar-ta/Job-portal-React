@@ -1,27 +1,23 @@
 import React from "react";
 import ProfileCard from "../../components/company/ProfileCard";
 import JobCard from "../../components/JobCard";
-import { useQuery } from "@tanstack/react-query";
-import { fetchUserCompany, fetchJobList } from "../../services/companyService";
+import {
+   useFecthUserCompany,
+   useFetchJobsQuery,
+} from "../../services/companyService";
 
 const CompanyProfile = () => {
    const {
       data: companyData,
       error: companyError,
       isLoading: companyLoading,
-   } = useQuery({
-      queryKey: ["userCompany"],
-      queryFn: fetchUserCompany,
-   });
+   } = useFecthUserCompany();
 
    const {
       data: jobsData,
       error: jobsError,
       isLoading: jobsLoading,
-   } = useQuery({
-      queryKey: ["jobs"],
-      queryFn: fetchJobList,
-   });
+   } = useFetchJobsQuery();
 
    if (companyLoading || jobsLoading) return <div>Loading...</div>;
    if (companyError) return <div>Error: {companyError.message}</div>;
