@@ -62,7 +62,7 @@ const Register = () => {
                         SignUp
                      </h1>
                      <hr />
-                     <div className="flex space-x-4 mt-2">
+                     <div className="flex space-x-4 mt-2">``
                         <div className="w-1/2">
                            <InputField
                               name="firstName"

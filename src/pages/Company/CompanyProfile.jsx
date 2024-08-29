@@ -5,6 +5,11 @@ import {
    useFecthUserCompany,
    useFetchJobsQuery,
 } from "../../services/companyService";
+import CompanyForm from "../../components/company/CompanyForm";
+import UserCard from "../../components/UserCard";
+import { useAuth } from "../../context/AuthContext";
+import UpdateUserForm from "../../components/company/UpdateUserForm";
+import JobForm from "../../components/company/JobForm";
 
 const CompanyProfile = () => {
    const {
@@ -13,11 +18,21 @@ const CompanyProfile = () => {
       isLoading: companyLoading,
    } = useFecthUserCompany();
 
+   const { user } = useAuth();
+
    const {
       data: jobsData,
       error: jobsError,
       isLoading: jobsLoading,
    } = useFetchJobsQuery();
+
+   const companyDetails = {
+      title: companyData?.title || "",
+      location: companyData?.location || "",
+      website: companyData?.website || "",
+      established_date: companyData?.established_date || "",
+      description: companyData?.description || "",
+   };
 
    if (companyLoading || jobsLoading) return <div>Loading...</div>;
    if (companyError) return <div>Error: {companyError.message}</div>;
@@ -25,12 +40,11 @@ const CompanyProfile = () => {
 
    return (
       <>
-         <ProfileCard
-            name={companyData?.title}
-            location={companyData?.location}
-            description={companyData?.description}
-            companyWebsite={companyData?.website}
-         />
+         <div className="lg:flex justify-evenly">
+            <ProfileCard initialValues={companyDetails} />
+            <UserCard user={user} />
+         </div>
+         {/* 
          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 md:gap-y-20 gap-y-6 p-6 mt-4 mx-0 md:mx-10">
             {jobsData?.map((job) => (
                <JobCard
@@ -44,6 +58,10 @@ const CompanyProfile = () => {
                />
             ))}
          </div>
+         <CompanyForm initialValues={companyDetails} />
+         <UpdateUserForm user={user} />
+         */}
+         <JobForm />
       </>
    );
 };

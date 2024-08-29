@@ -23,4 +23,24 @@ const loginValidationSchema = Yup.object().shape({
       .required("Password is required"),
 });
 
-export { registerValidationSchema, loginValidationSchema };
+const companyFormValidationSchema = Yup.object().shape({
+   title: Yup.string().required("Title is required."),
+   location: Yup.string().required("Location is required."),
+   website: Yup.string().notRequired(),
+   established_date: Yup.date().nullable().notRequired(),
+});
+
+const JobFormValidationSchema = Yup.object().shape({
+   title: Yup.string().required("Title is required."),
+   salary: Yup.number().notRequired(),
+   vacancy: Yup.number().required("Vacancy is required."),
+   description: Yup.string().required("Description is required."),
+   employment_type: Yup.string().required("Employment type is required."),
+});
+
+export {
+   registerValidationSchema,
+   loginValidationSchema,
+   companyFormValidationSchema,
+   JobFormValidationSchema,
+};
