@@ -2,7 +2,7 @@ import React from "react";
 import { FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 
-const UserCard = ({ user }) => {
+const UserCard = ({ user, onEdit }) => {
    const userImage = "https://via.placeholder.com/100";
 
    return (
@@ -29,7 +29,10 @@ const UserCard = ({ user }) => {
          </div>
 
          <div className="flex items-end justify-center h-24 relative">
-            <button className="text-sm sm:text-base bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300">
+            <button
+               onClick={onEdit}
+               className="text-sm sm:text-base bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300"
+            >
                Update User
             </button>
          </div>

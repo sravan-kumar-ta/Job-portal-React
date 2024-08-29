@@ -3,6 +3,7 @@ import React from "react";
 import InputField from "../InputField";
 import SubmitButton from "../SubmitButton";
 import { JobFormValidationSchema } from "../../utils/validationSchemas";
+import { IoCloseSharp } from "react-icons/io5";
 
 const initialValues = {
    title: "",
@@ -12,7 +13,7 @@ const initialValues = {
    employment_type: "",
 };
 
-const JobForm = () => {
+const JobForm = ({ onClick }) => {
    const handleSubmit = (values, { setSubmitting }) => {
       console.log("clicked");
       console.log(values);
@@ -26,7 +27,7 @@ const JobForm = () => {
          onSubmit={handleSubmit}
       >
          {({ isSubmitting, touched, errors }) => (
-            <Form className="max-w-lg mx-auto p-6 pt-1 bg-white rounded shadow-md mt-10">
+            <Form className="max-w-lg mx-auto p-6 pt-1 bg-white rounded shadow-md mt-6 relative">
                <h1 className="text-center text-2xl my-4 font-bold">Add Job</h1>
                <hr />
                <div className="flex space-x-11 mt-2">
@@ -93,6 +94,13 @@ const JobForm = () => {
                <div className="flex items-center justify-between">
                   <SubmitButton isSubmitting={isSubmitting} text="Add Job" />
                </div>
+
+               <button
+                  onClick={onClick}
+                  className="absolute top-2 right-2 rounded-full bg-zinc-100 p-1 text-2xl text-red-400 hover:bg-zinc-200 hover:text-red-600 shadow-xl transition-shadow duration-300"
+               >
+                  <IoCloseSharp />
+               </button>
             </Form>
          )}
       </Formik>

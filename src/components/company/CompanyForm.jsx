@@ -3,8 +3,9 @@ import React from "react";
 import InputField from "../InputField";
 import SubmitButton from "../SubmitButton";
 import { companyFormValidationSchema } from "../../utils/validationSchemas";
+import { IoCloseSharp } from "react-icons/io5";
 
-const CompanyForm = ({ initialValues }) => {
+const CompanyForm = ({ initialValues, onClick }) => {
    const handleSubmit = async () => {};
 
    return (
@@ -14,7 +15,7 @@ const CompanyForm = ({ initialValues }) => {
          onSubmit={handleSubmit}
       >
          {({ isSubmitting, touched, errors }) => (
-            <Form className="max-w-lg mx-auto p-6 pt-1 bg-white rounded shadow-md mt-6">
+            <Form className="max-w-lg mx-auto p-6 pt-1 bg-white rounded shadow-md mt-6 relative">
                <h1 className="text-center text-2xl my-4 font-bold">
                   Add Company
                </h1>
@@ -57,6 +58,13 @@ const CompanyForm = ({ initialValues }) => {
                <div className="flex items-center justify-between">
                   <SubmitButton isSubmitting={isSubmitting} text="Submit" />
                </div>
+
+               <button
+                  onClick={onClick}
+                  className="absolute top-2 right-2 rounded-full bg-zinc-100 p-1 text-2xl text-red-400 hover:bg-zinc-200 hover:text-red-600 shadow-xl transition-shadow duration-300"
+               >
+                  <IoCloseSharp />
+               </button>
             </Form>
          )}
       </Formik>

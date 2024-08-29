@@ -2,7 +2,7 @@ import React from "react";
 import { FaGlobe } from "react-icons/fa";
 import { FaLocationDot, FaCalendarDays } from "react-icons/fa6";
 
-const ProfileCard = ({ initialValues }) => {
+const ProfileCard = ({ initialValues, onEdit, onAddJob }) => {
    const logoUrl = "https://via.placeholder.com/100";
 
    return (
@@ -25,7 +25,9 @@ const ProfileCard = ({ initialValues }) => {
                </div>
                <div className="flex items-center mt-1 text-gray-600">
                   <FaCalendarDays className="mr-2" />
-                  <span>{initialValues.established_date || "Date not added yet"}</span>
+                  <span>
+                     {initialValues.established_date || "Date not added yet"}
+                  </span>
                </div>
             </div>
          </div>
@@ -50,10 +52,16 @@ const ProfileCard = ({ initialValues }) => {
                )}
             </div>
             <div className="flex mt-4 md:mt-0 justify-between">
-               <button className="text-sm sm:text-base mr-3 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300">
+               <button
+                  onClick={onAddJob}
+                  className="text-sm sm:text-base mr-3 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300"
+               >
                   Add Job
                </button>
-               <button className="text-sm sm:text-base bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300">
+               <button
+                  onClick={onEdit}
+                  className="text-sm sm:text-base bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300"
+               >
                   Update Company
                </button>
             </div>
