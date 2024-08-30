@@ -4,9 +4,27 @@ import InputField from "../InputField";
 import SubmitButton from "../SubmitButton";
 import { companyFormValidationSchema } from "../../utils/validationSchemas";
 import { IoCloseSharp } from "react-icons/io5";
+import { useUpdateCompanyMutation } from "../../services/companyService";
 
 const CompanyForm = ({ initialValues, onClick }) => {
-   const handleSubmit = async () => {};
+   const { mutate, isLoading, isError, error } = useUpdateCompanyMutation();
+
+   const handleSubmit = async (values) => {
+      const filteredValues = Object.fromEntries(
+         Object.entries(values).map(([key, value]) => [
+            key,
+            value === "" ? null : value,
+         ])
+      );
+      mutate(filteredValues, {
+         onSuccess: () => {
+            console.log("Company updated successfully");
+         },
+         onError: (error) => {
+            console.error("Error updating company:", error);
+         },
+      });
+   };
 
    return (
       <Formik
@@ -17,7 +35,7 @@ const CompanyForm = ({ initialValues, onClick }) => {
          {({ isSubmitting, touched, errors }) => (
             <Form className="max-w-lg mx-auto p-6 pt-1 bg-white rounded shadow-md mt-6 relative">
                <h1 className="text-center text-2xl my-4 font-bold">
-                  Add Company
+                  Update Company
                </h1>
                <hr />
                <div className="flex space-x-11 mt-2">

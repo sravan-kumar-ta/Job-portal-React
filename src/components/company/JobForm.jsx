@@ -1,4 +1,4 @@
-import { Field, Form, Formik } from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import React from "react";
 import InputField from "../InputField";
 import SubmitButton from "../SubmitButton";
@@ -14,6 +14,7 @@ const initialValues = {
 };
 
 const JobForm = ({ onClick }) => {
+   
    const handleSubmit = (values, { setSubmitting }) => {
       console.log("clicked");
       console.log(values);
@@ -80,15 +81,28 @@ const JobForm = ({ onClick }) => {
                   </div>
                </div>
                <div className="mb-4">
-                  <label className="block text-gray-700 font-bold mb-2">
+                  <label htmlFor="description" className="block text-gray-700 font-bold mb-2">
                      Description
                   </label>
-                  <textarea
+                  <Field
+                     as="textarea"
                      name="description"
+                     id="description"
                      cols="5"
                      rows="3"
-                     className="block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  ></textarea>
+                     className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 ${
+                        touched.description && errors.description
+                           ? "border-red-500"
+                           : touched.description
+                           ? "border-green-500"
+                           : "border-gray-300"
+                     }`}
+                  />
+                  <ErrorMessage
+                     name="description"
+                     component="div"
+                     className="text-red-500 text-sm mt-1"
+                  />
                </div>
 
                <div className="flex items-center justify-between">

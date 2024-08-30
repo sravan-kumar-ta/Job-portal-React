@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "./_axiosInstance";
 
 const fetchUserCompany = async () => {
@@ -21,7 +21,7 @@ const updateUserCompany = async (companyData) => {
 
 // Hooks -----
 
-const useFecthUserCompany = () => {
+const useFetchUserCompany = () => {
    return useQuery({
       queryKey: ["userCompany"],
       queryFn: fetchUserCompany,
@@ -37,7 +37,17 @@ const useFetchJobsQuery = () => {
    });
 };
 
-export { useFetchJobsQuery, useFecthUserCompany };
+const useUpdateCompanyMutation = () => {
+   const queryClient = useQueryClient();
+   return useMutation({
+      mutationFn: updateUserCompany,
+      onSuccess: () => {
+         queryClient.invalidateQueries({ queryKey: ["userCompany"] });
+      },
+   });
+};
+
+export { useFetchJobsQuery, useFetchUserCompany, useUpdateCompanyMutation };
 
 // useFetchJobsQuery
 // useFetchJobQuery

@@ -40,12 +40,12 @@ const ProfileCard = ({ initialValues, onEdit, onAddJob }) => {
                <FaGlobe className="text-gray-600 mr-2" />
                {initialValues.website ? (
                   <a
-                     href={companyWebsite}
+                     href={initialValues.website}
                      target="_blank"
                      rel="noopener noreferrer"
                      className="text-blue-600 hover:text-blue-800 transition-colors duration-300"
                   >
-                     {initialValues.website}
+                     Open website
                   </a>
                ) : (
                   <span className="italic">Website not added yet.</span>

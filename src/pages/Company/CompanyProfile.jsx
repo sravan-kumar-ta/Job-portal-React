@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ProfileCard from "../../components/company/ProfileCard";
 import JobCard from "../../components/JobCard";
 import {
-   useFecthUserCompany,
+   useFetchUserCompany,
    useFetchJobsQuery,
 } from "../../services/companyService";
 import CompanyForm from "../../components/company/CompanyForm";
@@ -21,7 +21,7 @@ const CompanyProfile = () => {
       data: companyData,
       error: companyError,
       isLoading: companyLoading,
-   } = useFecthUserCompany();
+   } = useFetchUserCompany();
 
    const { user } = useAuth();
 
