@@ -7,9 +7,9 @@ import {
 } from "../../services/companyService";
 import CompanyForm from "../../components/company/CompanyForm";
 import UserCard from "../../components/UserCard";
-import { useAuth } from "../../context/AuthContext";
 import UpdateUserForm from "../../components/company/UpdateUserForm";
 import JobForm from "../../components/company/JobForm";
+import { useGetUserQuery } from "../../services/authService";
 
 const CompanyProfile = () => {
    const [activeSection, setActiveSection] = useState("jobs");
@@ -22,8 +22,12 @@ const CompanyProfile = () => {
       error: companyError,
       isLoading: companyLoading,
    } = useFetchUserCompany();
-
-   const { user } = useAuth();
+   
+   const {
+      data: userData,
+      error: userError,
+      isLoading: userLoading,
+   } = useGetUserQuery();
 
    const {
       data: jobsData,
@@ -39,9 +43,11 @@ const CompanyProfile = () => {
       description: companyData?.description || "",
    };
 
-   if (companyLoading || jobsLoading) return <div>Loading...</div>;
+   if (companyLoading || jobsLoading || userLoading)
+      return <div>Loading...</div>;
    if (companyError) return <div>Error: {companyError.message}</div>;
    if (jobsError) return <div>Error: {jobsError.message}</div>;
+   if (userError) return <div>Error: {userError.message}</div>;
 
    return (
       <>
@@ -52,7 +58,7 @@ const CompanyProfile = () => {
                onAddJob={() => handleSectionChange("addJob")}
             />
             <UserCard
-               user={user}
+               user={userData}
                onEdit={() => handleSectionChange("updateUser")}
             />
          </div>
@@ -79,7 +85,7 @@ const CompanyProfile = () => {
          )}
          {activeSection === "updateUser" && (
             <UpdateUserForm
-               user={user}
+               user={userData}
                onClick={() => handleSectionChange("jobs")}
             />
          )}

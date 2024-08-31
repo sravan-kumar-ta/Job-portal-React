@@ -9,7 +9,7 @@ import { useUpdateUserMutation } from "../../services/authService";
 const UpdateUserForm = ({ user, onClick }) => {
    const { mutate, isLoading, isError, error } = useUpdateUserMutation();
 
-   const handleSubmit = async (values) => {
+   const handleSubmit = async (values, {setFieldError}) => {
       const filteredValues = Object.fromEntries(
          Object.entries(values).map(([key, value]) => [
             key,
@@ -23,6 +23,13 @@ const UpdateUserForm = ({ user, onClick }) => {
          },
          onError: (error) => {
             console.error("Error updating user:", error);
+            
+            if (error.response && error.response.data) {
+               const errors = error.response.data;
+               Object.keys(errors).forEach((field) => {
+                  setFieldError(field, errors[field][0]);
+               });
+            }
          },
       });
    };
@@ -35,7 +42,6 @@ const UpdateUserForm = ({ user, onClick }) => {
       >
          {({ isSubmitting, touched, errors }) => (
             <Form className="max-w-lg mx-auto p-6 pt-1 bg-white rounded shadow-md mt-10 relative">
-               {errors && <div>{JSON.stringify(errors, null, 2)}</div>}
                <h1 className="text-center text-2xl my-4 font-bold">
                   Update User
                </h1>

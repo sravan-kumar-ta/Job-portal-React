@@ -1,7 +1,7 @@
 import { configureAuth } from "react-query-auth";
 import { axiosInstance } from "./_axiosInstance";
-import { useMutation } from "@tanstack/react-query";
-import { useUser } from "../services/authService";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "../context/AuthContext";
 
 const { useUser, useLogin, useRegister, useLogout } = configureAuth({
    userFn: async () => {
@@ -85,20 +85,37 @@ const getUser = async () => {
    return response.data;
 };
 
+const useGetUserQuery = () => {
+   return useQuery({
+      queryKey: ["user"],
+      queryFn: getUser,
+      staleTime: 5 * 60 * 1000,
+   });
+};
+
 const updateUser = async (userData) => {
    const response = await axiosInstance.patch("auth/user/update/", userData);
    return response.data;
 };
 
 const useUpdateUserMutation = () => {
-   const { isLoading, error, refetch } = useUser({ enabled: false });
-
+   const { updateUser: userUpdate } = useAuth();
+   const queryClient = useQueryClient();
    return useMutation({
       mutationFn: updateUser,
-      onSuccess: () => {
-         refetch(); // Trigger a refetch using the refetch method from useAuth
+      onSuccess: (data, variables) => {
+         const user = data || variables;
+         userUpdate(user);
+         queryClient.invalidateQueries({ queryKey: ["user"] });
       },
    });
 };
 
-export { useUser, useLogin, useRegister, useLogout, useUpdateUserMutation };
+export {
+   useUser,
+   useLogin,
+   useRegister,
+   useLogout,
+   useGetUserQuery,
+   useUpdateUserMutation,
+};
