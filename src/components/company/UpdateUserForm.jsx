@@ -2,20 +2,40 @@ import { Form, Formik } from "formik";
 import React from "react";
 import InputField from "../InputField";
 import SubmitButton from "../SubmitButton";
-import { registerValidationSchema } from "../../utils/validationSchemas";
+import { userUpdateValidationSchema } from "../../utils/validationSchemas";
 import { IoCloseSharp } from "react-icons/io5";
+import { useUpdateUserMutation } from "../../services/authService";
 
 const UpdateUserForm = ({ user, onClick }) => {
-   const handleSubmit = async () => {};
+   const { mutate, isLoading, isError, error } = useUpdateUserMutation();
+
+   const handleSubmit = async (values) => {
+      const filteredValues = Object.fromEntries(
+         Object.entries(values).map(([key, value]) => [
+            key,
+            value === "" ? null : value,
+         ])
+      );
+      mutate(filteredValues, {
+         onSuccess: () => {
+            onClick(true);
+            console.log("User updated successfully");
+         },
+         onError: (error) => {
+            console.error("Error updating user:", error);
+         },
+      });
+   };
 
    return (
       <Formik
          initialValues={user}
-         validationSchema={registerValidationSchema}
+         validationSchema={userUpdateValidationSchema}
          onSubmit={handleSubmit}
       >
          {({ isSubmitting, touched, errors }) => (
             <Form className="max-w-lg mx-auto p-6 pt-1 bg-white rounded shadow-md mt-10 relative">
+               {errors && <div>{JSON.stringify(errors, null, 2)}</div>}
                <h1 className="text-center text-2xl my-4 font-bold">
                   Update User
                </h1>
@@ -52,7 +72,6 @@ const UpdateUserForm = ({ user, onClick }) => {
                <div className="flex items-center justify-between">
                   <SubmitButton isSubmitting={isSubmitting} text="Submit" />
                </div>
-               
 
                <button
                   onClick={onClick}

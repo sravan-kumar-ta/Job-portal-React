@@ -18,6 +18,7 @@ const CompanyForm = ({ initialValues, onClick }) => {
       );
       mutate(filteredValues, {
          onSuccess: () => {
+            onClick(true);
             console.log("Company updated successfully");
          },
          onError: (error) => {

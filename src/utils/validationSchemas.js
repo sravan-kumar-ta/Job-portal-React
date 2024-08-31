@@ -1,8 +1,8 @@
 import * as Yup from "yup";
 
 const registerValidationSchema = Yup.object().shape({
-   firstName: Yup.string().required("First name is required"),
-   lastName: Yup.string().required("Last name is required"),
+   first_name: Yup.string().required("First name is required"),
+   last_name: Yup.string().required("Last name is required"),
    username: Yup.string().required("Username is required"),
    email: Yup.string()
       .email("Invalid email address")
@@ -22,6 +22,12 @@ const loginValidationSchema = Yup.object().shape({
       .min(3, "Password must be at least 3 characters")
       .required("Password is required"),
 });
+
+const userUpdateValidationSchema = registerValidationSchema.omit([
+   "role",
+   "password",
+   "confirmPassword",
+]);
 
 const companyFormValidationSchema = Yup.object().shape({
    title: Yup.string().required("Title is required."),
@@ -43,4 +49,5 @@ export {
    loginValidationSchema,
    companyFormValidationSchema,
    JobFormValidationSchema,
+   userUpdateValidationSchema,
 };

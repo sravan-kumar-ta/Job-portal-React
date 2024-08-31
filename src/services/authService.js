@@ -1,5 +1,7 @@
 import { configureAuth } from "react-query-auth";
 import { axiosInstance } from "./_axiosInstance";
+import { useMutation } from "@tanstack/react-query";
+import { useUser } from "../services/authService";
 
 const { useUser, useLogin, useRegister, useLogout } = configureAuth({
    userFn: async () => {
@@ -16,14 +18,20 @@ const { useUser, useLogin, useRegister, useLogout } = configureAuth({
    },
    loginFn: async (credentials) => {
       try {
-         const { data } = await axiosInstance.post("/auth/login/", credentials, {
-            skipInterceptor: true,
-         });
+         const { data } = await axiosInstance.post(
+            "/auth/login/",
+            credentials,
+            {
+               skipInterceptor: true,
+            }
+         );
          const { access, refresh, user } = data;
 
          localStorage.setItem("access_token", access);
          localStorage.setItem("refresh_token", refresh);
-         axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${access}`;
+         axiosInstance.defaults.headers.common[
+            "Authorization"
+         ] = `Bearer ${access}`;
          return { status: "success", user };
       } catch (error) {
          if (error.response?.data) {
@@ -40,7 +48,10 @@ const { useUser, useLogin, useRegister, useLogout } = configureAuth({
    },
    registerFn: async (credentials) => {
       try {
-         const { data } = await axiosInstance.post("/auth/register/", credentials);
+         const { data } = await axiosInstance.post(
+            "/auth/register/",
+            credentials
+         );
          return { status: "success", data };
       } catch (error) {
          if (error.response?.status === 400) {
@@ -54,8 +65,8 @@ const { useUser, useLogin, useRegister, useLogout } = configureAuth({
    },
    logoutFn: async () => {
       try {
-         await axiosInstance.post('/auth/logout/', {
-           refresh: localStorage.getItem('refresh_token')
+         await axiosInstance.post("/auth/logout/", {
+            refresh: localStorage.getItem("refresh_token"),
          });
       } catch (error) {
          console.error("Logout failed", error);
@@ -69,4 +80,25 @@ const { useUser, useLogin, useRegister, useLogout } = configureAuth({
    },
 });
 
-export { useUser, useLogin, useRegister, useLogout };
+const getUser = async () => {
+   const response = await axiosInstance.get("auth/user/");
+   return response.data;
+};
+
+const updateUser = async (userData) => {
+   const response = await axiosInstance.patch("auth/user/update/", userData);
+   return response.data;
+};
+
+const useUpdateUserMutation = () => {
+   const { isLoading, error, refetch } = useUser({ enabled: false });
+
+   return useMutation({
+      mutationFn: updateUser,
+      onSuccess: () => {
+         refetch(); // Trigger a refetch using the refetch method from useAuth
+      },
+   });
+};
+
+export { useUser, useLogin, useRegister, useLogout, useUpdateUserMutation };

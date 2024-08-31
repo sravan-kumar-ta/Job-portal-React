@@ -6,8 +6,8 @@ import InputField from "../components/InputField";
 import SubmitButton from "../components/SubmitButton";
 
 const initialValues = {
-   firstName: "",
-   lastName: "",
+   first_name: "",
+   last_name: "",
    username: "",
    email: "",
    password: "",
@@ -24,8 +24,8 @@ const Register = () => {
       { setSubmitting, resetForm, setFieldError }
    ) => {
       const { status, data } = await register({
-         first_name: values.firstName,
-         last_name: values.lastName,
+         first_name: values.first_name,
+         last_name: values.last_name,
          username: values.username,
          email: values.email,
          password: values.password,
@@ -65,7 +65,7 @@ const Register = () => {
                      <div className="flex space-x-4 mt-2">``
                         <div className="w-1/2">
                            <InputField
-                              name="firstName"
+                              name="first_name"
                               label="First Name"
                               touched={touched}
                               errors={errors}
@@ -73,7 +73,7 @@ const Register = () => {
                         </div>
                         <div className="w-1/2">
                            <InputField
-                              name="lastName"
+                              name="last_name"
                               label="Last Name"
                               touched={touched}
                               errors={errors}
