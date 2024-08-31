@@ -1,6 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "./_axiosInstance";
 
+// --------------------
+// API Functions
+// --------------------
+
 const fetchUserCompany = async () => {
    const response = await axiosInstance.get("company/user-company/");
    return response.data;
@@ -19,9 +23,16 @@ const updateUserCompany = async (companyData) => {
    return response.data;
 };
 
-// Hooks -----
+const createJob = async (jobData) => {
+   const response = await axiosInstance.post("company/jobs/", jobData);
+   return response.data;
+};
 
-const useFetchUserCompany = () => {
+// --------------------
+// Custom Hooks
+// --------------------
+
+const useFetchUserCompanyQuery = () => {
    return useQuery({
       queryKey: ["userCompany"],
       queryFn: fetchUserCompany,
@@ -39,18 +50,44 @@ const useFetchJobsQuery = () => {
 
 const useUpdateCompanyMutation = () => {
    const queryClient = useQueryClient();
+
    return useMutation({
       mutationFn: updateUserCompany,
-      onSuccess: () => {
+      onSuccess: (data) => {
          queryClient.invalidateQueries({ queryKey: ["userCompany"] });
+         console.log("Company updated successfully:", data);
+      },
+      onError: (error) => {
+         console.error("Error updating company:", error);
       },
    });
 };
 
-export { useFetchJobsQuery, useFetchUserCompany, useUpdateCompanyMutation };
+const useCreateJobMutation = () => {
+   const queryClient = useQueryClient();
 
-// useFetchJobsQuery
+   return useMutation({
+      mutationFn: createJob,
+      onSuccess: (data) => {
+         queryClient.invalidateQueries({ queryKey: ["jobs"] });
+         console.log("Job created successfully:", data);
+      },
+      onError: (error) => {
+         console.error("Error creating job:", error);
+      },
+   });
+};
+
+export {
+   useFetchJobsQuery,
+   useFetchUserCompanyQuery,
+   useUpdateCompanyMutation,
+   useCreateJobMutation,
+};
+
+// to be done....
+
 // useFetchJobQuery
+
 // useAddJobMutation
 // useUpdateJobMutation
-// useDeleteJobMutation

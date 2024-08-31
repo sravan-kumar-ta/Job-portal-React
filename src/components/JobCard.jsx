@@ -20,7 +20,7 @@ const JobCard = ({
    };
 
    return (
-      <div className="md:w-9/12 w-full mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 relative">
+      <div className="md:w-11/12 w-full mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 relative">
          <span className="text-gray-600 bg-gray-100 py-1 px-2 rounded-bl-lg absolute top-0 right-0">
             {type}
          </span>
@@ -52,7 +52,7 @@ const JobCard = ({
 
          <section className="px-4 pb-4 mt-2">
             <p className="text-gray-700">
-               {excerpt(description, 75)}
+               {excerpt(description, 20)}
                <a href="" className="text-blue-600 hover:text-blue-800">
                   {" "}
                   Read more...

@@ -4,6 +4,7 @@ import InputField from "../InputField";
 import SubmitButton from "../SubmitButton";
 import { JobFormValidationSchema } from "../../utils/validationSchemas";
 import { IoCloseSharp } from "react-icons/io5";
+import { useCreateJobMutation } from "../../services/companyService";
 
 const initialValues = {
    title: "",
@@ -14,10 +15,34 @@ const initialValues = {
 };
 
 const JobForm = ({ onClick }) => {
-   
-   const handleSubmit = (values, { setSubmitting }) => {
-      console.log("clicked");
-      console.log(values);
+   const createJobMutation = useCreateJobMutation();
+
+   const handleSubmit = (
+      values,
+      { setSubmitting, setFieldError, resetForm }
+   ) => {
+      const filteredValues = Object.fromEntries(
+         Object.entries(values).map(([key, value]) => [
+            key,
+            value === "" ? null : value,
+         ])
+      );
+
+      createJobMutation.mutate(filteredValues, {
+         onSuccess: () => {
+            resetForm();
+            onClick(true);
+         },
+         onError: (error) => {
+            if (error.response && error.response.data) {
+               const errors = error.response.data;
+               Object.keys(errors).forEach((field) => {
+                  setFieldError(field, errors[field][0]);
+               });
+            }
+         },
+      });
+
       setSubmitting(false);
    };
 
@@ -81,7 +106,10 @@ const JobForm = ({ onClick }) => {
                   </div>
                </div>
                <div className="mb-4">
-                  <label htmlFor="description" className="block text-gray-700 font-bold mb-2">
+                  <label
+                     htmlFor="description"
+                     className="block text-gray-700 font-bold mb-2"
+                  >
                      Description
                   </label>
                   <Field
