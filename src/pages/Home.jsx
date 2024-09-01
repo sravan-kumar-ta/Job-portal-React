@@ -19,6 +19,7 @@ const Home = () => {
                salary={job.salary}
                description={job.description}
                location={job.company.location}
+               last_date_to_apply={job.last_date_to_apply}
             />
          ))}
       </div>

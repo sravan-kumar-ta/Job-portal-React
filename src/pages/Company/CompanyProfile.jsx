@@ -22,7 +22,7 @@ const CompanyProfile = () => {
       error: companyError,
       isLoading: companyLoading,
    } = useFetchUserCompanyQuery();
-   
+
    const {
       data: userData,
       error: userError,
@@ -73,6 +73,9 @@ const CompanyProfile = () => {
                      salary={job.salary}
                      description={job.description}
                      location={job.company.location}
+                     btn_text={"Open"}
+                     job_id={job.id}
+                     last_date_to_apply={job.last_date_to_apply}
                   />
                ))}
             </div>

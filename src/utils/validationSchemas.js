@@ -42,6 +42,7 @@ const JobFormValidationSchema = Yup.object().shape({
    vacancy: Yup.number().required("Vacancy is required."),
    description: Yup.string().required("Description is required."),
    employment_type: Yup.string().required("Employment type is required."),
+   last_date_to_apply: Yup.date().notRequired(),
 });
 
 export {

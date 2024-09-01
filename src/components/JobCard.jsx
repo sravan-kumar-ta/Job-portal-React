@@ -3,16 +3,18 @@ import { FaRegBuilding } from "react-icons/fa";
 import { MdCalendarMonth } from "react-icons/md";
 import { GiMoneyStack } from "react-icons/gi";
 import { FaLocationDot } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 const JobCard = ({
    type = "Full-Time",
    title = "Software Developer",
    company = "Example Corp",
-   experience = "2-4 years",
    salary = "₹5,00,000 - ₹10,00,000",
    location = "Bangalore, India",
    description = "We are looking for a talented software developer to join our team.",
+   last_date_to_apply = "2-4 years",
    btn_text = "Apply",
+   job_id = 1,
 }) => {
    const excerpt = (text, length) => {
       if (text.length <= length) return text;
@@ -36,17 +38,19 @@ const JobCard = ({
          </div>
 
          <div className="flex items-center ml-4">
-            <MdCalendarMonth className="text-gray-700 mr-1" />
-            <p className="text-gray-500">{experience}</p>
-         </div>
-
-         <div className="flex items-center ml-4">
             <GiMoneyStack className="text-gray-700 mr-1" />
-            <p className="text-gray-500">{salary}</p>
+            <p className="text-gray-500">{salary || "Not disclosed"}</p>
          </div>
-         <div className="flex items-center ml-4 mb-2">
+         <div className="flex items-center ml-4">
             <FaLocationDot className="text-gray-600 mr-1" />
             <p className="text-gray-600">{location}</p>
+         </div>
+
+         <div className="flex items-center ml-4 mb-2">
+            <MdCalendarMonth className="text-gray-700 mr-1" />
+            <p className="text-gray-500">
+               {last_date_to_apply || "Not disclosed"}
+            </p>
          </div>
          <hr />
 
@@ -61,9 +65,12 @@ const JobCard = ({
          </section>
 
          <footer className="px-4 py-2 bg-gray-100 border-t border-gray-200 text-center">
-            <button className="bg-blue-600 text-white text-sm font-semibold py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300">
+            <Link
+               to={`/company/jobs/${job_id}`}
+               className="bg-blue-600 text-white text-sm font-semibold py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300"
+            >
                {btn_text}
-            </button>
+            </Link>
          </footer>
       </div>
    );

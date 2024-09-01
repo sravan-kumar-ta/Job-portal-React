@@ -1,27 +1,23 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import React from "react";
-import InputField from "../InputField";
-import SubmitButton from "../SubmitButton";
-import { JobFormValidationSchema } from "../../utils/validationSchemas";
+import InputField from "./InputField";
+import SubmitButton from "./SubmitButton";
+import { JobFormValidationSchema } from "../utils/validationSchemas";
 import { IoCloseSharp } from "react-icons/io5";
-import { useCreateJobMutation } from "../../services/companyService";
+import { useUpdateJobMutation } from "../services/companyService";
 
-const initialValues = {
-   title: "",
-   salary: "",
-   vacancy: "",
-   description: "",
-   employment_type: "",
-   last_date_to_apply: ""
-};
+const UpdateJob = ({ jobDetails, toggle }) => {
+   const updateJobMutation = useUpdateJobMutation();
 
-const JobForm = ({ onClick }) => {
-   const createJobMutation = useCreateJobMutation();
+   const initialValues = {
+      title: jobDetails.title,
+      salary: jobDetails.salary,
+      vacancy: jobDetails.vacancy,
+      description: jobDetails.description,
+      employment_type: jobDetails.employment_type,
+      last_date_to_apply: jobDetails.last_date_to_apply,
+   };
 
-   const handleSubmit = (
-      values,
-      { setSubmitting, setFieldError, resetForm }
-   ) => {
+   const handleSubmit = (values, { setSubmitting, setFieldError }) => {
       const filteredValues = Object.fromEntries(
          Object.entries(values).map(([key, value]) => [
             key,
@@ -29,21 +25,25 @@ const JobForm = ({ onClick }) => {
          ])
       );
 
-      createJobMutation.mutate(filteredValues, {
-         onSuccess: () => {
-            resetForm();
-            onClick(true);
+      updateJobMutation.mutate(
+         {
+            jobId: jobDetails.id,
+            jobData: filteredValues,
          },
-         onError: (error) => {
-            if (error.response && error.response.data) {
-               const errors = error.response.data;
-               Object.keys(errors).forEach((field) => {
-                  setFieldError(field, errors[field][0]);
-               });
-            }
-         },
-      });
-
+         {
+            onSuccess: () => {
+               toggle(false);
+            },
+            onError: (error) => {
+               if (error.response && error.response.data) {
+                  const errors = error.response.data;
+                  Object.keys(errors).forEach((field) => {
+                     setFieldError(field, errors[field][0]);
+                  });
+               }
+            },
+         }
+      );
       setSubmitting(false);
    };
 
@@ -55,7 +55,9 @@ const JobForm = ({ onClick }) => {
       >
          {({ isSubmitting, touched, errors }) => (
             <Form className="max-w-lg mx-auto p-6 pt-1 bg-white rounded shadow-md mt-6 relative">
-               <h1 className="text-center text-2xl my-4 font-bold">Add Job</h1>
+               <h1 className="text-center text-2xl my-4 font-bold">
+                  Update Job
+               </h1>
                <hr />
                <div className="flex space-x-11 mt-2">
                   <InputField
@@ -146,7 +148,7 @@ const JobForm = ({ onClick }) => {
                </div>
 
                <button
-                  onClick={onClick}
+                  onClick={() => toggle(false)}
                   className="absolute top-2 right-2 rounded-full bg-zinc-100 p-1 text-2xl text-red-400 hover:bg-zinc-200 hover:text-red-600 shadow-xl transition-shadow duration-300"
                >
                   <IoCloseSharp />
@@ -157,4 +159,4 @@ const JobForm = ({ onClick }) => {
    );
 };
 
-export default JobForm;
+export default UpdateJob;

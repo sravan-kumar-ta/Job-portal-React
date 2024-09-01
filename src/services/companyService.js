@@ -28,6 +28,19 @@ const createJob = async (jobData) => {
    return response.data;
 };
 
+const fetchJob = async (jobId) => {
+   const response = await axiosInstance.get(`company/jobs/${jobId}/`);
+   return response.data;
+};
+
+const updateJob = async ({ jobId, jobData }) => {
+   const response = await axiosInstance.patch(
+      `company/jobs/${jobId}/`,
+      jobData
+   );
+   return response.data;
+};
+
 // --------------------
 // Custom Hooks
 // --------------------
@@ -78,16 +91,36 @@ const useCreateJobMutation = () => {
    });
 };
 
+const useFetchJobQuery = (jobId) => {
+   return useQuery({
+      queryKey: ["job" + jobId],
+      queryFn: () => fetchJob(jobId),
+      staleTime: 5 * 60 * 1000,
+      enabled: !!jobId, // Only run the query if jobId is truthy
+   });
+};
+
+const useUpdateJobMutation = () => {
+   const queryClient = useQueryClient();
+
+   return useMutation({
+      mutationFn: updateJob,
+      onSuccess: (data, variables) => {
+         console.log("variables", variables);
+         queryClient.invalidateQueries({ queryKey: ["job" + variables.jobId] });
+         queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      },
+      onError: (error) => {
+         console.error("Error updating job:", error);
+      },
+   });
+};
+
 export {
    useFetchJobsQuery,
    useFetchUserCompanyQuery,
    useUpdateCompanyMutation,
    useCreateJobMutation,
+   useFetchJobQuery,
+   useUpdateJobMutation,
 };
-
-// to be done....
-
-// useFetchJobQuery
-
-// useAddJobMutation
-// useUpdateJobMutation
