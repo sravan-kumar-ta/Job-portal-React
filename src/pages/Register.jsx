@@ -1,5 +1,5 @@
 import { useRegister } from "../services/authService";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { registerValidationSchema } from "../utils/validationSchemas";
 import InputField from "../components/InputField";
@@ -142,11 +142,20 @@ const Register = () => {
                            />
                         </div>
                      </div>
-                     <div className="flex items-center justify-between">
+                     <div className="flex flex-col items-center justify-center">
                         <SubmitButton
                            isSubmitting={isSubmitting}
                            text="Signup"
                         />
+                        <span className="mt-2">
+                           Already have an account?&nbsp;&nbsp;
+                           <Link
+                              to={"/login"}
+                              className="text-blue-600 border-b-2 border-blue-400 hover:text-blue-800"
+                           >
+                              Login
+                           </Link>
+                        </span>
                      </div>
 
                      {/* Display general form error if exists */}

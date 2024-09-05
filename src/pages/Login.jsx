@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useLogin, useLogout } from "../services/authService";
 import { Form, Formik } from "formik";
 import { loginValidationSchema } from "../utils/validationSchemas";
@@ -10,8 +10,8 @@ import { useAuth } from "../context/AuthContext";
 const LoginForm = () => {
    const [errorMessage, setErrorMessage] = useState("");
    const { mutateAsync: login } = useLogin();
-   const { mutateAsync: logout} = useLogout();
-   const { updateUser } = useAuth(); 
+   const { mutateAsync: logout } = useLogout();
+   const { updateUser } = useAuth();
    const navigate = useNavigate();
 
    const location = useLocation();
@@ -44,14 +44,6 @@ const LoginForm = () => {
       }
    };
 
-   useEffect(() => {
-      if (username) {
-         document.getElementsByName("password")[0].focus();
-      } else {
-         document.getElementsByName("username")[0].focus();
-      }
-   }, [username]);
-   
    return (
       <div className="bg-gray-100 min-h-screen">
          <div className="pt-16">
@@ -86,11 +78,20 @@ const LoginForm = () => {
                         </div>
                      )}
 
-                     <div className="flex items-center justify-between">
+                     <div className="flex flex-col items-center justify-center">
                         <SubmitButton
                            isSubmitting={isSubmitting}
                            text="Login"
                         />
+                        <span className="mt-2">
+                           Don't have an account?&nbsp;&nbsp;
+                           <Link
+                              to={"/register"}
+                              className="text-blue-600 border-b-2 border-blue-400 hover:text-blue-800"
+                           >
+                              Register
+                           </Link>
+                        </span>
                      </div>
                   </Form>
                )}

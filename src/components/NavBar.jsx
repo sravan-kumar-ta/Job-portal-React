@@ -21,7 +21,6 @@ const NavBar = () => {
          links.push({ href: "job_seeker/profile", text: "Profile" });
          links.push({ href: "/update-profile", text: "Profile" });
       } else if (role === "company") {
-         links.push({ href: "/company/jobs", text: "My Jobs" });
          links.push({ href: "/company/profile", text: "Profile" });
       }
    } else {

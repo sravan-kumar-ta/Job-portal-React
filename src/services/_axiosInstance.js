@@ -1,6 +1,5 @@
 import axios from "axios";
 import { QueryClient } from "@tanstack/react-query";
-import { useLogout } from "./authService";
 
 const axiosInstance = axios.create({
    baseURL: "http://localhost:8000/api/",
@@ -23,12 +22,18 @@ axiosInstance.interceptors.response.use(
       if (error.response.status === 401 && !originalRequest._retry) {
          originalRequest._retry = true;
 
+         const refreshToken = localStorage.getItem("refresh_token");
+         if (!refreshToken) {
+            window.location.href = "/login";
+            return Promise.reject(error);
+         }
+
          try {
             console.log("Token Refreshing...");
 
             const response = await axios.post(
                "http://localhost:8000/api/auth/token/refresh/",
-               { refresh: localStorage.getItem("refresh_token") }
+               { refresh: refreshToken }
             );
 
             const { access, refresh } = response.data;
@@ -45,7 +50,9 @@ axiosInstance.interceptors.response.use(
             return axiosInstance(originalRequest);
          } catch (refreshError) {
             console.error("Refresh token is expired", refreshError);
-            useLogout();
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("refresh_token");
+            window.location.href = "/login";
             return Promise.reject(refreshError);
          }
       }
