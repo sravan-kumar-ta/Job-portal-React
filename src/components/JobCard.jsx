@@ -20,6 +20,7 @@ const JobCard = ({
       if (text.length <= length) return text;
       return text.substring(0, length) + "...";
    };
+   let btnLink = `/company/jobs/${job_id}`;
 
    return (
       <div className="md:w-11/12 w-full mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 relative">
@@ -64,10 +65,10 @@ const JobCard = ({
             </p>
          </section>
 
-         <footer className="px-4 py-2 bg-gray-100 border-t border-gray-200 text-center">
+         <footer className="px-4 py-4 bg-gray-100 border-t border-gray-200 text-center">
             <Link
-               to={`/company/jobs/${job_id}`}
-               className="bg-blue-600 text-white text-sm font-semibold py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300"
+               to={btnLink}
+               className="bg-blue-600 text-white text-sm font-semibold py-2 px-5 rounded hover:bg-blue-700 transition-colors duration-300"
             >
                {btn_text}
             </Link>

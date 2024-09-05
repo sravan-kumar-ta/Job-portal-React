@@ -10,8 +10,8 @@ const fetchUserCompany = async () => {
    return response.data;
 };
 
-const fetchJobList = async () => {
-   const response = await axiosInstance.get("company/jobs/");
+const fetchJobListbyCompany = async () => {
+   const response = await axiosInstance.get("company/company-jobs/");
    return response.data;
 };
 
@@ -35,7 +35,7 @@ const fetchJob = async (jobId) => {
 
 const updateJob = async ({ jobId, jobData }) => {
    const response = await axiosInstance.patch(
-      `company/jobs/${jobId}/`,
+      `company/company-jobs/${jobId}/`,
       jobData
    );
    return response.data;
@@ -53,10 +53,10 @@ const useFetchUserCompanyQuery = () => {
    });
 };
 
-const useFetchJobsQuery = () => {
+const useFetchJobsbyCompanyQuery = () => {
    return useQuery({
-      queryKey: ["jobs"],
-      queryFn: fetchJobList,
+      queryKey: ["company-jobs"],
+      queryFn: fetchJobListbyCompany,
       staleTime: 5 * 60 * 1000,
    });
 };
@@ -82,7 +82,7 @@ const useCreateJobMutation = () => {
    return useMutation({
       mutationFn: createJob,
       onSuccess: (data) => {
-         queryClient.invalidateQueries({ queryKey: ["jobs"] });
+         queryClient.invalidateQueries({ queryKey: ["company-jobs"] });
          console.log("Job created successfully:", data);
       },
       onError: (error) => {
@@ -106,9 +106,8 @@ const useUpdateJobMutation = () => {
    return useMutation({
       mutationFn: updateJob,
       onSuccess: (data, variables) => {
-         console.log("variables", variables);
          queryClient.invalidateQueries({ queryKey: ["job" + variables.jobId] });
-         queryClient.invalidateQueries({ queryKey: ["jobs"] });
+         queryClient.invalidateQueries({ queryKey: ["company-jobs"] });
       },
       onError: (error) => {
          console.error("Error updating job:", error);
@@ -117,10 +116,10 @@ const useUpdateJobMutation = () => {
 };
 
 export {
-   useFetchJobsQuery,
    useFetchUserCompanyQuery,
    useUpdateCompanyMutation,
    useCreateJobMutation,
+   useFetchJobsbyCompanyQuery,
    useFetchJobQuery,
    useUpdateJobMutation,
 };

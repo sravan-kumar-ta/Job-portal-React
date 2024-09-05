@@ -10,7 +10,8 @@ const NavBar = () => {
       logout();
    };
 
-   let links = [{ href: "/", text: "Home" }];
+   // let links = [{ href: "/", text: "Home" }];
+   let links = [];
 
    const role = user?.role;
    if (role) {

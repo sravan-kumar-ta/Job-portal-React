@@ -3,7 +3,7 @@ import ProfileCard from "../../components/company/ProfileCard";
 import JobCard from "../../components/JobCard";
 import {
    useFetchUserCompanyQuery,
-   useFetchJobsQuery,
+   useFetchJobsbyCompanyQuery,
 } from "../../services/companyService";
 import CompanyForm from "../../components/company/CompanyForm";
 import UserCard from "../../components/UserCard";
@@ -33,7 +33,7 @@ const CompanyProfile = () => {
       data: jobsData,
       error: jobsError,
       isLoading: jobsLoading,
-   } = useFetchJobsQuery();
+   } = useFetchJobsbyCompanyQuery();
 
    const companyDetails = {
       title: companyData?.title || "",

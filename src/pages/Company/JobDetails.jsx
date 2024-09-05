@@ -21,7 +21,7 @@ const JobDetails = () => {
       <>
          {!showUpdation ? (
             <div className="flex justify-center">
-               <div className="w-2/6 bg-white shadow-md rounded-lg p-6 my-4 relative">
+               <div className="w-2/6 bg-white shadow-md rounded-lg p-6 my-4">
                   <div className="flex justify-between">
                      <h2 className="text-2xl font-semibold text-gray-800 mb-4">
                         {data.title}
@@ -56,12 +56,12 @@ const JobDetails = () => {
                      </p>
                   </div>
 
-                  <div className="flex items-end justify-center absolute bottom-3 right-3">
+                  <div className="flex justify-center">
                      <button
                         onClick={() => setShowUpdation(true)}
                         className="text-sm sm:text-base bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300"
                      >
-                        Update User
+                        Update Job
                      </button>
                   </div>
                </div>
