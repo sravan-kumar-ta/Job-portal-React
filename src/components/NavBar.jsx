@@ -17,7 +17,6 @@ const NavBar = () => {
    if (role) {
       if (role === "admin") {
          links.push({ href: "admin/dashboard", text: "Dashboard" });
-         links.push({ href: "admin/dashboard/update-admin", text: "Update" });
       } else if (role === "job_seeker") {
          links.push({ href: "job_seeker/profile", text: "Profile" });
          links.push({ href: "/update-profile", text: "Profile" });

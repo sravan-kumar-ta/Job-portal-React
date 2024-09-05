@@ -1,9 +1,9 @@
 import React from "react";
 import JobCard from "../components/JobCard";
-import { useFetchJobsQuery } from "../services/companyService";
+import { useFetchJobsbyCompanyQuery } from "../services/companyService";
 
 const Home = () => {
-   const { data: jobsData, error, isLoading } = useFetchJobsQuery();
+   const { data: jobsData, error, isLoading } = useFetchJobsbyCompanyQuery();
 
    if (isLoading) return <div>Loading...</div>;
    if (error) return <div>Error: {error.message}</div>;
