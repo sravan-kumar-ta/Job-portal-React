@@ -44,7 +44,7 @@ const JobSeekers = () => {
                      <th className="px-4 py-2 border-b">Action</th>
                   </tr>
                </thead>
-               <tbody>
+               <tbody align="center">
                   {allData.map((seeker) => (
                      <tr key={seeker.id}>
                         <td className="px-4 py-2 border-b">

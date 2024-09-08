@@ -1,10 +1,20 @@
 import React from "react";
 import { FaUser, FaBuilding, FaUserCog } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useFetchCountQuery } from "../../services/adminService";
 
 const AdminDashboard = () => {
    const { user } = useAuth();
+   const { data, isLoading, isError, error } = useFetchCountQuery();
+   
+   if (isLoading) {
+      return <div>Loading...</div>;
+   }
+   if (isError) {
+      return <div>Error: {error.message}</div>;
+   }
+
 
    const jobSeekersCount = 120;
    const companiesCount = 45;
@@ -59,7 +69,7 @@ const AdminDashboard = () => {
                   </div>
                   <div className="flex justify-between items-center">
                      <p className="text-gray-600 text-lg">
-                        {jobSeekersCount} registered
+                        {data.job_seekers} registered
                      </p>
                      <NavLink
                         to={"job-seekers"}
@@ -80,11 +90,15 @@ const AdminDashboard = () => {
                   </div>
                   <div className="flex justify-between items-center">
                      <p className="text-gray-600 text-lg">
-                        {companiesCount} registered
+                        {data.companies} registered
                      </p>
-                     <button className="border border-blue-600 text-blue-600 text-sm font-semibold py-2 px-4 rounded hover:bg-blue-600 hover:text-white transition-colors duration-300">
+
+                     <Link
+                        to={"companies"}
+                        className="border border-blue-600 text-blue-600 text-sm font-semibold py-2 px-4 rounded hover:bg-blue-600 hover:text-white transition-colors duration-300"
+                     >
                         View all
-                     </button>
+                     </Link>
                   </div>
                </div>
             </div>

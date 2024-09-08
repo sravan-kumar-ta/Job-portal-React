@@ -17,6 +17,11 @@ const fetchCompanies = async () => {
    return response.data;
 };
 
+const fetchCounts = async () => {
+   const response = await axiosInstance.get("admin/dashboard/");
+   return response.data;
+};
+
 // --------------------
 // Custom Hooks
 // --------------------
@@ -37,4 +42,12 @@ const useFetchCompaniesQuery = () => {
    });
 };
 
-export { useFetchJobSeekersQuery, useFetchCompaniesQuery };
+const useFetchCountQuery = () => {
+   return useQuery({
+      queryKey: ["count"],
+      queryFn: fetchCounts,
+      staleTime: 5 * 60 * 1000,
+   });
+};
+
+export { useFetchJobSeekersQuery, useFetchCompaniesQuery, useFetchCountQuery };
