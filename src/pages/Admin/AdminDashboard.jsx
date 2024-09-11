@@ -7,17 +7,13 @@ import { useFetchCountQuery } from "../../services/adminService";
 const AdminDashboard = () => {
    const { user } = useAuth();
    const { data, isLoading, isError, error } = useFetchCountQuery();
-   
+
    if (isLoading) {
       return <div>Loading...</div>;
    }
    if (isError) {
       return <div>Error: {error.message}</div>;
    }
-
-
-   const jobSeekersCount = 120;
-   const companiesCount = 45;
 
    return (
       <div className="p-6 bg-gray-100 min-h-screen">

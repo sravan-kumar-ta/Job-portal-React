@@ -1,7 +1,15 @@
 import React from "react";
 import { Field, ErrorMessage } from "formik";
 
-const InputField = ({ name, label, type = "text", touched, errors }) => (
+const InputField = ({
+   name,
+   label,
+   type = "text",
+   touched,
+   errors,
+   disabled,
+   placeholder = "",
+}) => (
    <div className="mb-4">
       <label htmlFor={name} className="block text-gray-700 font-bold mb-2">
          {label}
@@ -10,6 +18,8 @@ const InputField = ({ name, label, type = "text", touched, errors }) => (
          type={type}
          name={name}
          id={name}
+         disabled={disabled}
+         placeholder={placeholder}
          className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 ${
             touched[name] && errors[name]
                ? "border-red-500"

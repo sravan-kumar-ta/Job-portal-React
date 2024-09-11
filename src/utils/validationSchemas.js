@@ -45,10 +45,31 @@ const JobFormValidationSchema = Yup.object().shape({
    last_date_to_apply: Yup.date().notRequired(),
 });
 
+const ExperienceValidationSchema = Yup.object().shape({
+   job_title: Yup.string().required("Title is required."),
+   company: Yup.string().required("Company name is required."),
+   start_date: Yup.date().required("Start date is required."),
+   end_date: Yup.date()
+      .nullable()
+      .when("is_current", {
+         is: false,
+         then: (schema) =>
+            schema
+               .required("End date is required for non-current experiences.")
+               .min(
+                  Yup.ref("start_date"),
+                  "End date must be after the start date."
+               ),
+         otherwise: (schema) => schema.nullable(),
+      }),
+   is_current: Yup.boolean().default(false),
+});
+
 export {
    registerValidationSchema,
    loginValidationSchema,
    companyFormValidationSchema,
    JobFormValidationSchema,
    userUpdateValidationSchema,
+   ExperienceValidationSchema,
 };
