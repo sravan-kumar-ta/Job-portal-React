@@ -10,11 +10,39 @@ import AddResume from "../../components/jobSeeker/AddResume";
 import Resume from "../../components/jobSeeker/Resume";
 import Experience from "../../components/jobSeeker/Experience";
 import AddExperience from "../../components/jobSeeker/AddExperience";
+import {
+   useFetchExperiencesQuery,
+   useFetchProfileQuery,
+   useFetchResumesQuery,
+} from "../../services/seekerService";
 
 const Profile = () => {
    const { user } = useAuth();
    const [isAddingResume, setIsAddingResume] = useState(false);
    const [isAddingExp, setIsAddingExp] = useState(false);
+   const { data: profile, isLoading, isError, error } = useFetchProfileQuery();
+   const {
+      data: resumes,
+      isLoading: resumeIsLoading,
+      isError: resumeIsError,
+      error: resumeError,
+   } = useFetchResumesQuery();
+
+   const {
+      data: experiences,
+      isLoading: isLoadingExp,
+      isError: isErrorExp,
+      error: errorExp,
+   } = useFetchExperiencesQuery();
+
+   const formatDate = (dateString) => {
+      const [year, month] = dateString.split("-");
+      const date = new Date(year, month - 1);
+      return date.toLocaleString("default", {
+         month: "short",
+         year: "numeric",
+      });
+   };
 
    const toggleAdd = () => {
       setIsAddingResume((prev) => !prev);
@@ -24,6 +52,10 @@ const Profile = () => {
       setIsAddingExp((prev) => !prev);
    };
 
+   if (isLoading) {
+      return <div>Loading...</div>;
+   }
+
    return (
       <div className="p-6 bg-gray-100 min-h-screen">
          <div className="lg:w-3/5 xl:w-2/5 mx-auto">
@@ -32,11 +64,14 @@ const Profile = () => {
             </h1>
 
             {/* User Details Section */}
-            <div className="flex bg-white border border-gray-200 rounded-lg shadow-lg p-6 mb-6">
+            <div className="flex bg-white border border-gray-200 rounded-lg shadow-lg p-6 mb-6 relative">
                <img
                   className="w-32 h-32 rounded-full my-auto"
-                  src="https://loremflickr.com/320/320/girl"
-                  alt=""
+                  src={
+                     profile?.profile_photo ||
+                     "https://loremflickr.com/320/320/girl"
+                  }
+                  alt="Profile photo"
                />
                <div className="ml-6">
                   <p className="font-medium leading-none text-gray-900">
@@ -53,11 +88,8 @@ const Profile = () => {
                      </div>
                   </div>
 
-                  <p className="mt-2 text-sm text-gray-900">
-                     Lorem ipsum dolor sit amet, consecte adipisicing elit.
-                     Voluptatibus quia Maiores et perferendis eaque.
-                  </p>
-                  <div className="flex items-end justify-end">
+                  <p className="mt-2 text-sm text-gray-900">{profile.bio}</p>
+                  <div className="absolute right-6 bottom-6">
                      <NavLink
                         to={"update-admin"}
                         className="border border-blue-600 text-blue-600 text-sm font-semibold py-2 px-4 rounded hover:bg-blue-600 hover:text-white transition-colors duration-300"
@@ -100,22 +132,13 @@ const Profile = () => {
                      <AddResume />
                   ) : (
                      <>
-                        <Resume
-                           link={"https://example3.com"}
-                           title={"Python developer"}
-                        />
-                        <Resume
-                           link={"https://example3.com"}
-                           title={"Python developer"}
-                        />
-                        <Resume
-                           link={"https://example3.com"}
-                           title={"Python developer"}
-                        />
-                        <Resume
-                           link={"https://example3.com"}
-                           title={"Python developer"}
-                        />
+                        {resumes?.map((resume) => (
+                           <Resume
+                              key={resume.id}
+                              title={resume.resume_title}
+                              link={resume.resume}
+                           />
+                        ))}
                      </>
                   )}
                </div>
@@ -148,12 +171,16 @@ const Profile = () => {
                   {isAddingExp ? (
                      <AddExperience />
                   ) : (
-                     <Experience
-                        jobRole={"Full stack developer"}
-                        company={"IBM"}
-                        start={"jna 2020"}
-                        end={"present"}
-                     />
+                     <>
+                        {experiences.map((exp) => (
+                           <Experience
+                              jobRole={exp.job_title}
+                              company={exp.company}
+                              start={formatDate(exp.start_date)}
+                              end={formatDate(exp.end_date)}
+                           />
+                        ))}
+                     </>
                   )}
                </div>
             </div>

@@ -10,6 +10,27 @@ const fetchJobs = async () => {
    return response.data;
 };
 
+const createProfile = async () => {
+   ///// pending
+   const response = await axiosInstance.post("seeker/profile/");
+   return response.data;
+};
+
+const fetchProfile = async () => {
+   const response = await axiosInstance.get("seeker/profile/my_profile/");
+   return response.data;
+};
+
+const fetchResumes = async () => {
+   const response = await axiosInstance.get("seeker/resume/");
+   return response.data;
+};
+
+const fetchExperiences = async () => {
+   const response = await axiosInstance.get("seeker/experience");
+   return response.data;
+};
+
 // --------------------
 // Custom Hooks
 // --------------------
@@ -22,4 +43,33 @@ const useFetchJobsQuery = () => {
    });
 };
 
-export { useFetchJobsQuery };
+const useFetchProfileQuery = () => {
+   return useQuery({
+      queryKey: ["profile"],
+      queryFn: fetchProfile,
+      staleTime: 5 * 60 * 1000,
+   });
+};
+
+const useFetchResumesQuery = () => {
+   return useQuery({
+      queryKey: ["resumes"],
+      queryFn: fetchResumes,
+      staleTime: 5 * 60 * 1000,
+   });
+};
+
+const useFetchExperiencesQuery = () => {
+   return useQuery({
+      queryKey: ["experiences"],
+      queryFn: fetchExperiences,
+      staleTime: 5 * 60 * 1000,
+   });
+};
+
+export {
+   useFetchJobsQuery,
+   useFetchProfileQuery,
+   useFetchResumesQuery,
+   useFetchExperiencesQuery,
+};
