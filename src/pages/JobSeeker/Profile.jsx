@@ -15,17 +15,26 @@ import {
    useFetchProfileQuery,
    useFetchResumesQuery,
 } from "../../services/seekerService";
+import ExperienceSkeleton from "../../components/jobSeeker/skeletons/ExperienceSkeleton";
+import ResumeSkeleton from "../../components/jobSeeker/skeletons/ResumeSkeleton";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const Profile = () => {
    const { user } = useAuth();
    const [isAddingResume, setIsAddingResume] = useState(false);
    const [isAddingExp, setIsAddingExp] = useState(false);
-   const { data: profile, isLoading, isError, error } = useFetchProfileQuery();
+   const {
+      data: profile,
+      isLoading: isLoadingProfile,
+      isError: isErrorProfile,
+      error: errorProfile,
+   } = useFetchProfileQuery();
    const {
       data: resumes,
-      isLoading: resumeIsLoading,
-      isError: resumeIsError,
-      error: resumeError,
+      isLoading: isLoadingResume,
+      isError: isErrorResume,
+      error: errorResume,
    } = useFetchResumesQuery();
 
    const {
@@ -35,15 +44,6 @@ const Profile = () => {
       error: errorExp,
    } = useFetchExperiencesQuery();
 
-   const formatDate = (dateString) => {
-      const [year, month] = dateString.split("-");
-      const date = new Date(year, month - 1);
-      return date.toLocaleString("default", {
-         month: "short",
-         year: "numeric",
-      });
-   };
-
    const toggleAdd = () => {
       setIsAddingResume((prev) => !prev);
    };
@@ -51,10 +51,6 @@ const Profile = () => {
    const toggleExp = () => {
       setIsAddingExp((prev) => !prev);
    };
-
-   if (isLoading) {
-      return <div>Loading...</div>;
-   }
 
    return (
       <div className="p-6 bg-gray-100 min-h-screen">
@@ -65,30 +61,41 @@ const Profile = () => {
 
             {/* User Details Section */}
             <div className="flex bg-white border border-gray-200 rounded-lg shadow-lg p-6 mb-6 relative">
-               <img
-                  className="w-32 h-32 rounded-full my-auto"
-                  src={
-                     profile?.profile_photo ||
-                     "https://loremflickr.com/320/320/girl"
-                  }
-                  alt="Profile photo"
-               />
+               <>
+                  {isLoadingProfile ? (
+                     <Skeleton circle={true} height={128} width={128} />
+                  ) : (
+                     <img
+                        className="w-32 h-32 rounded-full my-auto"
+                        src={
+                           profile.profile_photo ||
+                           "https://loremflickr.com/320/320/girl"
+                        }
+                        alt="Profile photo"
+                     />
+                  )}
+               </>
                <div className="ml-6">
                   <p className="font-medium leading-none text-gray-900">
-                     {user.get_full_name}
+                     {user.get_full_name || <Skeleton width={180} />}
                   </p>
                   <div className="flex text-gray-700 py-2">
                      <div className="flex items-center">
                         <FaUserCircle className="mr-1" />
-                        <p>{user.username}</p>
+                        <p>{user.username || <Skeleton width={80} />}</p>
                      </div>
                      <div className="flex items-center">
                         <ImMail4 className="ml-4 mr-1" />
-                        <p>{user.email}</p>
+                        <p>{user.email || <Skeleton width={100} />}</p>
                      </div>
                   </div>
-
-                  <p className="mt-2 text-sm text-gray-900">{profile.bio}</p>
+                  {isLoadingProfile ? (
+                     <Skeleton count={3} />
+                  ) : (
+                     <p className="mt-2 text-sm text-gray-900">
+                        {profile.bio || "Bio not added yet."}
+                     </p>
+                  )}
                   <div className="absolute right-6 bottom-6">
                      <NavLink
                         to={"update-admin"}
@@ -130,16 +137,16 @@ const Profile = () => {
 
                   {isAddingResume ? (
                      <AddResume />
+                  ) : isLoadingResume ? (
+                     <ResumeSkeleton />
                   ) : (
-                     <>
-                        {resumes?.map((resume) => (
-                           <Resume
-                              key={resume.id}
-                              title={resume.resume_title}
-                              link={resume.resume}
-                           />
-                        ))}
-                     </>
+                     resumes?.map((resume) => (
+                        <Resume
+                           key={resume.id}
+                           title={resume.resume_title}
+                           link={resume.resume}
+                        />
+                     ))
                   )}
                </div>
 
@@ -170,15 +177,12 @@ const Profile = () => {
                   </div>
                   {isAddingExp ? (
                      <AddExperience />
+                  ) : isLoadingExp ? (
+                     <ExperienceSkeleton />
                   ) : (
                      <>
                         {experiences.map((exp) => (
-                           <Experience
-                              jobRole={exp.job_title}
-                              company={exp.company}
-                              start={formatDate(exp.start_date)}
-                              end={formatDate(exp.end_date)}
-                           />
+                           <Experience key={exp.id} exp={exp} />
                         ))}
                      </>
                   )}
