@@ -5,59 +5,49 @@ import { GiMoneyStack } from "react-icons/gi";
 import { FaLocationDot } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 
-const JobCard = ({
-   type = "Full-Time",
-   title = "Software Developer",
-   company = "Example Corp",
-   salary = "₹5,00,000 - ₹10,00,000",
-   location = "Bangalore, India",
-   description = "We are looking for a talented software developer to join our team.",
-   last_date_to_apply = "2-4 years",
-   btn_text = "Apply",
-   job_id = 1,
-}) => {
+const JobCard = ({ btn_text = "Apply", job = null }) => {
    const excerpt = (text, length) => {
       if (text.length <= length) return text;
       return text.substring(0, length) + "...";
    };
-   let btnLink = `/company/jobs/${job_id}`;
+   let btnLink = `/company/jobs/${job.id}`;
 
    return (
       <div className="md:w-11/12 w-full mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 relative">
          <span className="text-gray-600 bg-gray-100 py-1 px-2 rounded-bl-lg absolute top-0 right-0">
-            {type}
+            {job.employment_type}
          </span>
 
          <header className="p-4">
-            <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
+            <h2 className="text-xl font-semibold text-gray-800">{job.title}</h2>
          </header>
          <hr />
 
          <div className="flex items-center ml-4 mt-2">
             <FaRegBuilding className="text-gray-700 mr-1" />
-            <p className="text-gray-600">{company}</p>
+            <p className="text-gray-600">{job.company.title}</p>
          </div>
 
          <div className="flex items-center ml-4">
             <GiMoneyStack className="text-gray-700 mr-1" />
-            <p className="text-gray-500">{salary || "Not disclosed"}</p>
+            <p className="text-gray-500">{job.salary || "Not disclosed"}</p>
          </div>
          <div className="flex items-center ml-4">
             <FaLocationDot className="text-gray-600 mr-1" />
-            <p className="text-gray-600">{location}</p>
+            <p className="text-gray-600">{job.company.location}</p>
          </div>
 
          <div className="flex items-center ml-4 mb-2">
             <MdCalendarMonth className="text-gray-700 mr-1" />
             <p className="text-gray-500">
-               {last_date_to_apply || "Not disclosed"}
+               {job.last_date_to_apply || "Not disclosed"}
             </p>
          </div>
          <hr />
 
          <section className="px-4 pb-4 mt-2">
             <p className="text-gray-700">
-               {excerpt(description, 20)}
+               {excerpt(job.description, 20)}
                <a href="" className="text-blue-600 hover:text-blue-800">
                   {" "}
                   Read more...
