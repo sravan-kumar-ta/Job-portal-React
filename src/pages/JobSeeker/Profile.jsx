@@ -183,7 +183,7 @@ const Profile = () => {
                   ) : (
                      <>
                         {experiences.map((exp) => (
-                           <Experience key={exp.id} exp={exp} />
+                           <Experience key={exp.id} id={exp.id} exp={exp} />
                         ))}
                      </>
                   )}

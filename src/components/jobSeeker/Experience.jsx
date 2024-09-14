@@ -3,8 +3,11 @@ import { FaBuilding, FaRegTrashAlt } from "react-icons/fa";
 import { HiOutlineBadgeCheck } from "react-icons/hi";
 import { GrEdit } from "react-icons/gr";
 import { LuTimer } from "react-icons/lu";
+import { useDeleteExperienceMutation } from "../../services/seekerService";
 
-const Experience = ({ exp }) => {
+const Experience = ({ id, exp }) => {
+   const deleteExperienceMutation = useDeleteExperienceMutation();
+
    const formatDate = (dateString) => {
       const [year, month] = dateString.split("-");
       const date = new Date(year, month - 1);
@@ -12,6 +15,10 @@ const Experience = ({ exp }) => {
          month: "short",
          year: "numeric",
       });
+   };
+
+   const hanldeDelete = () => {
+      deleteExperienceMutation.mutate(id);
    };
 
    return (
@@ -44,7 +51,10 @@ const Experience = ({ exp }) => {
          </div>
          <div className="absolute flex items-start space-x-3 right-2">
             <GrEdit className="text-yellow-500 cursor-pointer" />
-            <FaRegTrashAlt className="text-red-500 cursor-pointer" />
+            <FaRegTrashAlt
+               className="text-red-500 cursor-pointer"
+               onClick={hanldeDelete}
+            />
          </div>
       </div>
    );
