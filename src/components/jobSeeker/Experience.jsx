@@ -5,7 +5,7 @@ import { GrEdit } from "react-icons/gr";
 import { LuTimer } from "react-icons/lu";
 import { useDeleteExperienceMutation } from "../../services/seekerService";
 
-const Experience = ({ id, exp }) => {
+const Experience = ({ exp, setUpdation }) => {
    const deleteExperienceMutation = useDeleteExperienceMutation();
 
    const formatDate = (dateString) => {
@@ -17,8 +17,8 @@ const Experience = ({ id, exp }) => {
       });
    };
 
-   const hanldeDelete = () => {
-      deleteExperienceMutation.mutate(id);
+   const handleDelete = () => {
+      deleteExperienceMutation.mutate(exp.id);
    };
 
    return (
@@ -50,10 +50,13 @@ const Experience = ({ id, exp }) => {
             </div>
          </div>
          <div className="absolute flex items-start space-x-3 right-2">
-            <GrEdit className="text-yellow-500 cursor-pointer" />
+            <GrEdit
+               className="text-yellow-500 cursor-pointer"
+               onClick={() => setUpdation(exp)}
+            />
             <FaRegTrashAlt
                className="text-red-500 cursor-pointer"
-               onClick={hanldeDelete}
+               onClick={handleDelete}
             />
          </div>
       </div>

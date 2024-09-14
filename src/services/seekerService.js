@@ -54,6 +54,14 @@ const deleteExperience = async (id) => {
    return response.data;
 };
 
+const updateExperience = async (data) => {
+   const response = await axiosInstance.patch(
+      `seeker/experience/${data.id}/`,
+      data
+   );
+   return response.data;
+};
+
 // --------------------
 // Custom Hooks
 // --------------------
@@ -172,7 +180,6 @@ const useCreateExperienceMutation = () => {
    });
 };
 
-
 const useDeleteExperienceMutation = () => {
    const queryClient = useQueryClient();
 
@@ -196,6 +203,34 @@ const useDeleteExperienceMutation = () => {
    });
 };
 
+const useUpdateExperienceMutation = () => {
+   const queryClient = useQueryClient();
+
+   return useMutation({
+      mutationFn: updateExperience,
+      onMutate: async (updatedExp) => {
+         console.log("values from service:", updatedExp);
+         await queryClient.cancelQueries({ queryKey: ["experiences"] });
+         const previousExps = queryClient.getQueryData(["experiences"]);
+         
+         queryClient.setQueryData(["experiences"], (oldExps) =>
+            oldExps.map((exp) =>
+               exp.id === updatedExp.id ? { ...exp, ...updatedExp } : exp
+            )
+         );
+
+         return { previousExps };
+      },
+      onError: (err, updatedExp, context) => {
+         console.log(err);
+         queryClient.setQueryData(["experiences"], context.previousExps);
+      },
+      onSettled: () => {
+         queryClient.invalidateQueries({ queryKey: ["experiences"] });
+      },
+   });
+};
+
 export {
    useFetchJobsQuery,
    useFetchProfileQuery,
@@ -206,4 +241,5 @@ export {
    useFetchExperiencesQuery,
    useCreateExperienceMutation,
    useDeleteExperienceMutation,
+   useUpdateExperienceMutation,
 };

@@ -9,7 +9,7 @@ import { useAuth } from "../../context/AuthContext";
 import AddResume from "../../components/jobSeeker/AddResume";
 import Resume from "../../components/jobSeeker/Resume";
 import Experience from "../../components/jobSeeker/Experience";
-import AddExperience from "../../components/jobSeeker/AddExperience";
+import ExperienceForm from "../../components/jobSeeker/ExperienceForm";
 import {
    useFetchExperiencesQuery,
    useFetchProfileQuery,
@@ -24,6 +24,9 @@ const Profile = () => {
    const { user } = useAuth();
    const [isAddingResume, setIsAddingResume] = useState(false);
    const [isAddingExp, setIsAddingExp] = useState(false);
+   const [isUpdatingExp, setIsUpdatingExp] = useState(false);
+   const [updationExp, setUpdationExp] = useState();
+
    const {
       data: profile,
       isLoading: isLoadingProfile,
@@ -48,8 +51,14 @@ const Profile = () => {
       setIsAddingResume((prev) => !prev);
    };
 
-   const toggleExp = () => {
-      setIsAddingExp((prev) => !prev);
+   const closeExpForm = () => {
+      setIsAddingExp(false);
+      setIsUpdatingExp(false);
+   };
+
+   const setUpdation = (exp) => {
+      setUpdationExp(exp);
+      setIsUpdatingExp(true);
    };
 
    return (
@@ -157,18 +166,23 @@ const Profile = () => {
                      <div className="flex">
                         <MdWork className="text-green-600 text-3xl mr-4" />
                         <h2 className="text-2xl font-semibold text-gray-800">
-                           {isAddingExp ? "Add Experience" : "Experiences"}
+                           {!isAddingExp && !isUpdatingExp
+                              ? "Experiences"
+                              : (isAddingExp && "Add Experience") ||
+                                (isUpdatingExp && "Update Experien...")}
                         </h2>
                      </div>
-                     {isAddingExp ? (
+                     {isAddingExp || isUpdatingExp ? (
                         <IoMdCloseCircleOutline
-                           onClick={toggleExp}
+                           onClick={closeExpForm}
                            className="text-red-600 cursor-pointer transition-all duration-300"
                            size={21}
                         />
                      ) : (
                         <button
-                           onClick={toggleExp}
+                           onClick={() => {
+                              setIsAddingExp(true);
+                           }}
                            className="flex items-center border border-blue-600 text-blue-600 text-sm font-semibold py-1 px-4 rounded hover:bg-blue-600 hover:text-white transition-all duration-300"
                         >
                            Add
@@ -176,14 +190,24 @@ const Profile = () => {
                         </button>
                      )}
                   </div>
-                  {isAddingExp ? (
-                     <AddExperience setIsAddingExp={setIsAddingExp} />
+                  {isUpdatingExp ? (
+                     <ExperienceForm
+                        setIsAddingExp={setIsAddingExp}
+                        updationValues={updationExp}
+                        setIsUpdatingExp={setIsUpdatingExp}
+                     />
+                  ) : isAddingExp ? (
+                     <ExperienceForm setIsAddingExp={setIsAddingExp} />
                   ) : isLoadingExp ? (
                      <ExperienceSkeleton />
                   ) : (
                      <>
                         {experiences.map((exp) => (
-                           <Experience key={exp.id} id={exp.id} exp={exp} />
+                           <Experience
+                              key={exp.id}
+                              exp={exp}
+                              setUpdation={setUpdation}
+                           />
                         ))}
                      </>
                   )}
