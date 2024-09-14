@@ -3,6 +3,7 @@ import { Formik, Field, Form } from "formik";
 import { ExperienceValidationSchema } from "../../utils/validationSchemas";
 import InputField from "../InputField";
 import SubmitButton from "../SubmitButton";
+import { useCreateExperienceMutation } from "../../services/seekerService";
 
 const initialValues = {
    job_title: "",
@@ -12,9 +13,20 @@ const initialValues = {
    is_current: false,
 };
 
-const AddExperience = () => {
+const AddExperience = ({ setIsAddingExp }) => {
+   const { mutate, isLoading, isError, error } = useCreateExperienceMutation();
+
    const handleSubmit = (values, { setSubmitting }) => {
       console.log(values);
+
+      mutate(values, {
+         onSuccess: () => {
+            setIsAddingExp(false);
+         },
+         onError: (error) => {
+            console.error("Error creating experience:", error);
+         },
+      });
 
       setSubmitting(false);
    };
@@ -37,6 +49,7 @@ const AddExperience = () => {
                <InputField
                   name="company"
                   label="Company"
+                  placeholder="Company Title"
                   touched={touched}
                   errors={errors}
                />

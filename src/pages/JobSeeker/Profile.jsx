@@ -177,7 +177,7 @@ const Profile = () => {
                      )}
                   </div>
                   {isAddingExp ? (
-                     <AddExperience />
+                     <AddExperience setIsAddingExp={setIsAddingExp} />
                   ) : isLoadingExp ? (
                      <ExperienceSkeleton />
                   ) : (

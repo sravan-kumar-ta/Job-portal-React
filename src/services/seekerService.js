@@ -10,14 +10,13 @@ const fetchJobs = async () => {
    return response.data;
 };
 
-const createProfile = async () => {
-   ///// pending
-   const response = await axiosInstance.post("seeker/profile/");
+const fetchProfile = async () => {
+   const response = await axiosInstance.get("seeker/profile/my_profile/");
    return response.data;
 };
 
-const fetchProfile = async () => {
-   const response = await axiosInstance.get("seeker/profile/my_profile/");
+const createProfile = async (data) => {
+   const response = await axiosInstance.post("seeker/profile/", data);
    return response.data;
 };
 
@@ -45,6 +44,11 @@ const fetchExperiences = async () => {
    return response.data;
 };
 
+const createExperience = async (data) => {
+   const response = await axiosInstance.post("seeker/experience/", data);
+   return response.data;
+};
+
 // --------------------
 // Custom Hooks
 // --------------------
@@ -62,6 +66,20 @@ const useFetchProfileQuery = () => {
       queryKey: ["profile"],
       queryFn: fetchProfile,
       staleTime: 5 * 60 * 1000,
+   });
+};
+
+const useCreateProfileMutation = () => {
+   const queryClient = useQueryClient();
+
+   return useMutation({
+      mutationFn: createProfile,
+      onSuccess: () => {
+         queryClient.invalidateQueries("profile");
+      },
+      onError: (error) => {
+         console.error("Error creating profile:", error);
+      },
    });
 };
 
@@ -103,22 +121,23 @@ const useDeleteResumeMutation = () => {
       mutationFn: deleteResume,
       onMutate: async (resumeId) => {
          // Optimistically update cache before mutation
-         await queryClient.cancelQueries({ queryKey: ['resumes'] });
-         const previousResumes = queryClient.getQueryData(['resumes']);
-         queryClient.setQueryData(['resumes'], (oldResumes) => 
+         await queryClient.cancelQueries({ queryKey: ["resumes"] });
+         const previousResumes = queryClient.getQueryData(["resumes"]);
+         queryClient.setQueryData(["resumes"], (oldResumes) =>
             oldResumes.filter((resume) => resume.id !== resumeId)
          );
 
          return { previousResumes };
       },
       onError: (err, resumeId, context) => {
-         queryClient.setQueryData(['resumes'], context.previousResumes);
+         queryClient.setQueryData(["resumes"], context.previousResumes);
       },
       onSettled: () => {
-         queryClient.invalidateQueries({ queryKey: ['resumes'] });
+         queryClient.invalidateQueries({ queryKey: ["resumes"] });
       },
    });
 };
+
 const useFetchExperiencesQuery = () => {
    return useQuery({
       queryKey: ["experiences"],
@@ -127,11 +146,34 @@ const useFetchExperiencesQuery = () => {
    });
 };
 
+const useCreateExperienceMutation = () => {
+   const queryClient = useQueryClient();
+
+   return useMutation({
+      mutationFn: createExperience,
+      onMutate: async (newExp) => {
+         await queryClient.cancelQueries({ queryKey: ["experiences"] });
+         const previousExperiences = queryClient.getQueryData(["experiences"]);
+         queryClient.setQueryData(["experiences"], (old) => [...old, newExp]);
+         return { previousExperiences };
+      },
+      onError: (err, newExp, context) => {
+         console.log(err);
+         queryClient.setQueryData(["experiences"], context.previousExperiences);
+      },
+      onSettled: () => {
+         queryClient.invalidateQueries({ queryKey: ["experiences"] });
+      },
+   });
+};
+
 export {
    useFetchJobsQuery,
    useFetchProfileQuery,
+   useCreateProfileMutation,
    useFetchResumesQuery,
    useCreateResumeMutation,
    useDeleteResumeMutation,
    useFetchExperiencesQuery,
+   useCreateExperienceMutation,
 };

@@ -31,7 +31,13 @@ const Experience = ({ exp }) => {
                         {formatDate(exp.start_date)}
                      </p>
                      <p className="text-zinc-500 mx-2">to</p>
-                     <p className="text-zinc-500">{formatDate(exp.end_date)}</p>
+                     {exp.is_current ? (
+                        <p className="text-zinc-700">Present</p>
+                     ) : (
+                        <p className="text-zinc-500">
+                           {formatDate(exp.end_date)}
+                        </p>
+                     )}
                   </div>
                </div>
             </div>
