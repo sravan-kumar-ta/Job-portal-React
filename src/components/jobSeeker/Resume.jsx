@@ -1,9 +1,15 @@
 import React from "react";
-import { GrEdit } from "react-icons/gr";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { FaRectangleList } from "react-icons/fa6";
+import { useDeleteResumeMutation } from "../../services/seekerService";
 
-const Resume = ({ link, title }) => {
+const Resume = ({ link, title, id }) => {
+   const deleteResumeMutation = useDeleteResumeMutation();
+
+   const handleDelete = () => {
+      deleteResumeMutation.mutate(id);
+   };
+
    return (
       <div className="flex items-center justify-between bg-slate-100 p-2 my-2">
          <div className="flex items-center">
@@ -16,10 +22,10 @@ const Resume = ({ link, title }) => {
                {title}
             </a>
          </div>
-         <div className="flex items-center">
-            <GrEdit className="text-yellow-500 cursor-pointer" />
-            <FaRegTrashAlt className="ml-3 text-red-500 cursor-pointer" />
-         </div>
+         <FaRegTrashAlt
+            className="ml-3 text-red-500 cursor-pointer"
+            onClick={handleDelete}
+         />
       </div>
    );
 };

@@ -1,6 +1,7 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import React from "react";
 import * as Yup from "yup";
+import { useCreateResumeMutation } from "../../services/seekerService";
 
 const validationSchema = Yup.object().shape({
    resume_title: Yup.string().required("Resume title is required."),
@@ -25,9 +26,26 @@ const initialValues = {
    resume: null,
 };
 
-const AddResume = () => {
-   const handleSubmit = (values) => {
+const AddResume = ({ setIsAddingResume }) => {
+   const createResumeMutation = useCreateResumeMutation();
+
+   const handleSubmit = (values, { setSubmitting }) => {
       console.log(values);
+      createResumeMutation.mutate(values, {
+         onSuccess: () => {
+            setIsAddingResume(false);
+         },
+         onError: (error) => {
+            if (error.response && error.response.data) {
+               const errors = error.response.data;
+               Object.keys(errors).forEach((field) => {
+                  setFieldError(field, errors[field][0]);
+               });
+            }
+         },
+      });
+
+      setSubmitting(false);
    };
 
    return (
@@ -37,7 +55,10 @@ const AddResume = () => {
          onSubmit={handleSubmit}
       >
          {({ isSubmitting, touched, errors, setFieldValue }) => (
-            <Form className="border border-green-200 rounded px-2 py-4">
+            <Form
+               encType="multipart/form-data"
+               className="border border-green-200 rounded px-2 py-4"
+            >
                <Field
                   type="text"
                   name="resume_title"
@@ -69,7 +90,7 @@ const AddResume = () => {
                   }`}
                   onChange={(event) => {
                      const file = event.target.files[0];
-                     setFieldValue("resume", file); // Set file field value in Formik
+                     setFieldValue("resume", file);
                   }}
                />
 

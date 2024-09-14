@@ -136,13 +136,14 @@ const Profile = () => {
                   </div>
 
                   {isAddingResume ? (
-                     <AddResume />
+                     <AddResume setIsAddingResume={setIsAddingResume} />
                   ) : isLoadingResume ? (
                      <ResumeSkeleton />
                   ) : (
                      resumes?.map((resume) => (
                         <Resume
                            key={resume.id}
+                           id={resume.id}
                            title={resume.resume_title}
                            link={resume.resume}
                         />

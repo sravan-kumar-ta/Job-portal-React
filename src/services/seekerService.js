@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "./_axiosInstance";
 
 // --------------------
@@ -23,6 +23,20 @@ const fetchProfile = async () => {
 
 const fetchResumes = async () => {
    const response = await axiosInstance.get("seeker/resume/");
+   return response.data;
+};
+
+const createResume = async (data) => {
+   const response = await axiosInstance.post("seeker/resume/", data, {
+      headers: {
+         "Content-Type": "multipart/form-data",
+      },
+   });
+   return response.data;
+};
+
+const deleteResume = async (id) => {
+   const response = await axiosInstance.delete(`seeker/resume/${id}/`);
    return response.data;
 };
 
@@ -59,6 +73,52 @@ const useFetchResumesQuery = () => {
    });
 };
 
+const useCreateResumeMutation = () => {
+   const queryClient = useQueryClient();
+
+   return useMutation({
+      mutationFn: createResume,
+      onMutate: async (newResume) => {
+         // optimistic updates
+         await queryClient.cancelQueries({ queryKey: ["resumes"] }); // cancels any ongoing refetches
+         const previousResumes = queryClient.getQueryData(["resumes"]);
+         queryClient.setQueryData(["resumes"], (old) => [...old, newResume]);
+         return { previousResumes };
+         // If we use only invalidateQueries, there is a delay for server response
+      },
+      onError: (err, newResume, context) => {
+         console.log(err);
+         queryClient.setQueryData(["resumes"], context.previousResumes);
+      },
+      onSettled: () => {
+         queryClient.invalidateQueries({ queryKey: ["resumes"] });
+      },
+   });
+};
+
+const useDeleteResumeMutation = () => {
+   const queryClient = useQueryClient();
+
+   return useMutation({
+      mutationFn: deleteResume,
+      onMutate: async (resumeId) => {
+         // Optimistically update cache before mutation
+         await queryClient.cancelQueries({ queryKey: ['resumes'] });
+         const previousResumes = queryClient.getQueryData(['resumes']);
+         queryClient.setQueryData(['resumes'], (oldResumes) => 
+            oldResumes.filter((resume) => resume.id !== resumeId)
+         );
+
+         return { previousResumes };
+      },
+      onError: (err, resumeId, context) => {
+         queryClient.setQueryData(['resumes'], context.previousResumes);
+      },
+      onSettled: () => {
+         queryClient.invalidateQueries({ queryKey: ['resumes'] });
+      },
+   });
+};
 const useFetchExperiencesQuery = () => {
    return useQuery({
       queryKey: ["experiences"],
@@ -71,5 +131,7 @@ export {
    useFetchJobsQuery,
    useFetchProfileQuery,
    useFetchResumesQuery,
+   useCreateResumeMutation,
+   useDeleteResumeMutation,
    useFetchExperiencesQuery,
 };

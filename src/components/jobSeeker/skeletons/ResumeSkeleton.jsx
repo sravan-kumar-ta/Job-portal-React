@@ -1,7 +1,6 @@
 import React from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { FaRectangleList } from "react-icons/fa6";
-import { GrEdit } from "react-icons/gr";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
@@ -17,10 +16,8 @@ const ResumeSkeleton = () => {
                      <Skeleton width={160} />
                   </p>
                </div>
-               <div className="flex items-center">
-                  <GrEdit className="text-yellow-500 cursor-pointer" />
-                  <FaRegTrashAlt className="ml-3 text-red-500 cursor-pointer" />
-               </div>
+               
+               <FaRegTrashAlt className="ml-3 text-red-500 cursor-pointer" />
             </div>
          );
       });
