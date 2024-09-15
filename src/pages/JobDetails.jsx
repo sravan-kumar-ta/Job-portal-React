@@ -1,15 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useFetchJobQuery } from "../../services/companyService";
-import UpdateJob from "../../components/UpdateJob";
+import { useFetchJobQuery } from "../services/companyService";
+import { useGetUserQuery } from "../services/authService";
+import UpdateJob from "../components/UpdateJob";
 
 const JobDetails = () => {
    const { jobId } = useParams();
+   const [userRole, setUserRole] = useState("");
    const [showUpdation, setShowUpdation] = useState(false);
-
+   const { data: user, isLoading: isLoadingUser } = useGetUserQuery();
    const { data, isLoading, isError, error } = useFetchJobQuery(jobId);
 
-   if (isLoading) {
+   useEffect(() => {
+      if (user && data) {
+         if (user.role === "job_seeker") {
+            setUserRole("seeker");
+         } else if (user.role === "admin") {
+            setUserRole("admin");
+         } else if (user.role === "company") {
+            if (user.id === data.company.user.id) {
+               setUserRole("owner");
+            }
+         }
+      }
+   }, [user, data]);
+
+   if (isLoading || isLoadingUser) {
       return <div>Loading job details...</div>;
    }
 
@@ -56,14 +72,25 @@ const JobDetails = () => {
                      </p>
                   </div>
 
-                  <div className="flex justify-center">
-                     <button
-                        onClick={() => setShowUpdation(true)}
-                        className="text-sm sm:text-base bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300"
-                     >
-                        Update Job
-                     </button>
-                  </div>
+                  {userRole === "seeker" && (
+                     <div className="flex justify-center">
+                        <button className="text-sm sm:text-base bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300">
+                           Apply Job
+                        </button>
+                     </div>
+                  )}
+
+                  {userRole === "admin" ||
+                     (userRole === "owner" && (
+                        <div className="flex justify-center">
+                           <button
+                              onClick={() => setShowUpdation(true)}
+                              className="text-sm sm:text-base bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300"
+                           >
+                              Update Job
+                           </button>
+                        </div>
+                     ))}
                </div>
             </div>
          ) : (

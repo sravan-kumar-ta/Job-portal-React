@@ -1,10 +1,11 @@
 import { NavLink } from "react-router-dom";
-import { useLogout } from "../services/authService";
+import { useGetUserQuery, useLogout } from "../services/authService";
 import { useAuth } from "../context/AuthContext";
 
 const NavBar = () => {
    const { mutateAsync: logout } = useLogout();
-   const { user } = useAuth();
+   // const { user } = useAuth();
+   const { data: user, isLoading } = useGetUserQuery();
 
    const handleLogout = () => {
       logout();
@@ -20,13 +21,16 @@ const NavBar = () => {
       } else if (role === "job_seeker") {
          links.push({ href: "/", text: "Home" });
          links.push({ href: "job_seeker/profile", text: "Profile" });
-         links.push({ href: "/update-profile", text: "Profile" });
       } else if (role === "company") {
          links.push({ href: "/company/profile", text: "Profile" });
       }
    } else {
       links.push({ href: "/signup", text: "Signup" });
       links.push({ href: "/login", text: "Login" });
+   }
+
+   if (isLoading) {
+      return <div>loading..</div>;
    }
 
    return (

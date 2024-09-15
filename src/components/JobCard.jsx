@@ -10,7 +10,8 @@ const JobCard = ({ btn_text = "Apply", job = null }) => {
       if (text.length <= length) return text;
       return text.substring(0, length) + "...";
    };
-   let btnLink = `/company/jobs/${job.id}`;
+   
+   let btnLink = `/job/${job.id}`;
 
    return (
       <div className="md:w-11/12 w-full mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 relative">

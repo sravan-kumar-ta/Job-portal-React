@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "../components/ProtectedRoute";
-import Profile from "../pages/JobSeeker/Profile"
+import Profile from "../pages/JobSeeker/Profile";
 import UpdateProfile from "../pages/JobSeeker/UpdateProfile";
 
 const JobSeekerRoutesConfig = [

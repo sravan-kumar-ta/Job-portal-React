@@ -7,6 +7,7 @@ import LoginForm from "./pages/Login";
 import AdminRoutes from "./routes/AdminRoutes";
 import CompanyRoutes from "./routes/CompanyRoutes";
 import JobSeekerRoutes from "./routes/JobSeekerRoutes";
+import JobDetails from "./pages/JobDetails";
 
 function App() {
    return (
@@ -20,6 +21,7 @@ function App() {
                   <Route path="admin/*" element={<AdminRoutes />} />
                   <Route path="company/*" element={<CompanyRoutes />} />
                   <Route path="job_seeker/*" element={<JobSeekerRoutes />} />
+                  <Route path="/job/:jobId" element={<JobDetails />} />
                </Routes>
             </ConditionalNavBar>
          </BrowserRouter>
