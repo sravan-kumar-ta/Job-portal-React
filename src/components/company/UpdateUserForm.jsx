@@ -1,4 +1,4 @@
-import { Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import React from "react";
 import InputField from "../InputField";
 import SubmitButton from "../SubmitButton";
@@ -9,7 +9,7 @@ import { useUpdateUserMutation } from "../../services/authService";
 const UpdateUserForm = ({ user, onClick }) => {
    const { mutate, isLoading, isError, error } = useUpdateUserMutation();
 
-   const handleSubmit = async (values, {setFieldError}) => {
+   const handleSubmit = async (values, { setFieldError }) => {
       const filteredValues = Object.fromEntries(
          Object.entries(values).map(([key, value]) => [
             key,
@@ -23,7 +23,7 @@ const UpdateUserForm = ({ user, onClick }) => {
          },
          onError: (error) => {
             console.error("Error updating user:", error);
-            
+
             if (error.response && error.response.data) {
                const errors = error.response.data;
                Object.keys(errors).forEach((field) => {
@@ -74,6 +74,7 @@ const UpdateUserForm = ({ user, onClick }) => {
                      errors={errors}
                      type="email"
                   />
+                  
                </div>
                <div className="flex items-center justify-between">
                   <SubmitButton isSubmitting={isSubmitting} text="Submit" />

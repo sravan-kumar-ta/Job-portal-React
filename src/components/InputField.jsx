@@ -9,8 +9,9 @@ const InputField = ({
    errors,
    disabled,
    placeholder = "",
+   className = null,
 }) => (
-   <div className="mb-4">
+   <div className={`mb-4 ${className}`}>
       <label htmlFor={name} className="block text-gray-700 font-bold mb-2">
          {label}
       </label>

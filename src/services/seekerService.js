@@ -15,8 +15,16 @@ const fetchProfile = async () => {
    return response.data;
 };
 
-const createProfile = async (data) => {
-   const response = await axiosInstance.post("seeker/profile/", data);
+const updateProfile = async (data) => {
+   const response = await axiosInstance.patch(
+      "seeker/profile/my_profile/",
+      data,
+      {
+         headers: {
+            "Content-Type": "multipart/form-data",
+         },
+      }
+   );
    return response.data;
 };
 
@@ -82,11 +90,11 @@ const useFetchProfileQuery = () => {
    });
 };
 
-const useCreateProfileMutation = () => {
+const useUpdateProfileMutation = () => {
    const queryClient = useQueryClient();
 
    return useMutation({
-      mutationFn: createProfile,
+      mutationFn: updateProfile,
       onSuccess: () => {
          queryClient.invalidateQueries("profile");
       },
@@ -212,7 +220,7 @@ const useUpdateExperienceMutation = () => {
          console.log("values from service:", updatedExp);
          await queryClient.cancelQueries({ queryKey: ["experiences"] });
          const previousExps = queryClient.getQueryData(["experiences"]);
-         
+
          queryClient.setQueryData(["experiences"], (oldExps) =>
             oldExps.map((exp) =>
                exp.id === updatedExp.id ? { ...exp, ...updatedExp } : exp
@@ -234,7 +242,7 @@ const useUpdateExperienceMutation = () => {
 export {
    useFetchJobsQuery,
    useFetchProfileQuery,
-   useCreateProfileMutation,
+   useUpdateProfileMutation,
    useFetchResumesQuery,
    useCreateResumeMutation,
    useDeleteResumeMutation,

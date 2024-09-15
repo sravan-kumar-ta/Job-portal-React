@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { IoAddCircleOutline, IoDocumentText } from "react-icons/io5";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { FaUserCircle } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ImMail4 } from "react-icons/im";
 import { MdWork } from "react-icons/md";
-import { useAuth } from "../../context/AuthContext";
 import AddResume from "../../components/jobSeeker/AddResume";
 import Resume from "../../components/jobSeeker/Resume";
 import Experience from "../../components/jobSeeker/Experience";
@@ -19,33 +18,25 @@ import ExperienceSkeleton from "../../components/jobSeeker/skeletons/ExperienceS
 import ResumeSkeleton from "../../components/jobSeeker/skeletons/ResumeSkeleton";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { useGetUserQuery } from "../../services/authService";
+import { BiEditAlt } from "react-icons/bi";
+import ProfileImageForm from "../../components/jobSeeker/ProfileImageForm";
+import ProfileBioForm from "../../components/jobSeeker/ProfileBioForm";
 
 const Profile = () => {
-   const { user } = useAuth();
    const [isAddingResume, setIsAddingResume] = useState(false);
    const [isAddingExp, setIsAddingExp] = useState(false);
    const [isUpdatingExp, setIsUpdatingExp] = useState(false);
    const [updationExp, setUpdationExp] = useState();
+   const [isAddingPicture, setIsAddingPicture] = useState(false);
+   const [isAddingBio, setIsAddingBio] = useState(false);
 
-   const {
-      data: profile,
-      isLoading: isLoadingProfile,
-      isError: isErrorProfile,
-      error: errorProfile,
-   } = useFetchProfileQuery();
-   const {
-      data: resumes,
-      isLoading: isLoadingResume,
-      isError: isErrorResume,
-      error: errorResume,
-   } = useFetchResumesQuery();
-
-   const {
-      data: experiences,
-      isLoading: isLoadingExp,
-      isError: isErrorExp,
-      error: errorExp,
-   } = useFetchExperiencesQuery();
+   const { data: user, isLoading: isLoadingUser } = useGetUserQuery();
+   const { data: resumes, isLoading: isLoadingResume } = useFetchResumesQuery();
+   const { data: profile, isLoading: isLoadingProfile } =
+      useFetchProfileQuery();
+   const { data: experiences, isLoading: isLoadingExp } =
+      useFetchExperiencesQuery();
 
    const toggleAdd = () => {
       setIsAddingResume((prev) => !prev);
@@ -73,45 +64,96 @@ const Profile = () => {
                <>
                   {isLoadingProfile ? (
                      <Skeleton circle={true} height={128} width={128} />
+                  ) : isAddingPicture ? (
+                     <ProfileImageForm
+                        setIsAddingPicture={setIsAddingPicture}
+                     />
+                  ) : profile?.profile_photo ? (
+                     <div className="relative">
+                        <img
+                           className="w-32 h-32 rounded-full my-auto"
+                           src={profile.profile_photo}
+                           alt="Profile photo"
+                        />
+                        <BiEditAlt
+                           size={18}
+                           onClick={() => setIsAddingPicture(true)}
+                           className="absolute bottom-1 right-1 cursor-pointer"
+                        />
+                     </div>
                   ) : (
                      <img
                         className="w-32 h-32 rounded-full my-auto"
-                        src={
-                           profile.profile_photo ||
-                           "https://loremflickr.com/320/320/girl"
-                        }
+                        src="https://loremflickr.com/320/320/girl"
                         alt="Profile photo"
                      />
                   )}
                </>
+
                <div className="ml-6">
-                  <p className="font-medium leading-none text-gray-900">
-                     {user.get_full_name || <Skeleton width={180} />}
-                  </p>
-                  <div className="flex text-gray-700 py-2">
-                     <div className="flex items-center">
-                        <FaUserCircle className="mr-1" />
-                        <p>{user.username || <Skeleton width={80} />}</p>
-                     </div>
-                     <div className="flex items-center">
-                        <ImMail4 className="ml-4 mr-1" />
-                        <p>{user.email || <Skeleton width={100} />}</p>
-                     </div>
-                  </div>
+                  {isLoadingUser ? (
+                     <>
+                        <p className="font-medium leading-none text-gray-900">
+                           <Skeleton width={180} />
+                        </p>
+                        <div className="flex text-gray-700 py-2">
+                           <div className="flex items-center">
+                              <FaUserCircle className="mr-1" />
+                              <Skeleton width={80} />
+                           </div>
+                           <div className="flex items-center">
+                              <ImMail4 className="ml-4 mr-1" />
+                              <Skeleton width={100} />
+                           </div>
+                        </div>
+                     </>
+                  ) : (
+                     <>
+                        <p className="font-medium leading-none text-gray-900">
+                           {user.get_full_name || <Skeleton width={180} />}
+                        </p>
+                        <div className="flex text-gray-700 py-2">
+                           <div className="flex items-center">
+                              <FaUserCircle className="mr-1" />
+                              <p>{user.username || <Skeleton width={80} />}</p>
+                           </div>
+                           <div className="flex items-center">
+                              <ImMail4 className="ml-4 mr-1" />
+                              <p>{user.email || <Skeleton width={100} />}</p>
+                           </div>
+                        </div>
+                     </>
+                  )}
+
                   {isLoadingProfile ? (
                      <Skeleton count={3} />
+                  ) : isAddingBio ? (
+                     <>
+                        <ProfileBioForm
+                           setIsAddingBio={setIsAddingBio}
+                           profile={profile}
+                        />
+                     </>
                   ) : (
-                     <p className="mt-2 text-sm text-gray-900">
-                        {profile.bio || "Bio not added yet."}
-                     </p>
+                     <div className="flex items-end">
+                        <p className="mt-2 text-sm text-gray-900">
+                           {profile.bio || "Bio not added yet."}
+                        </p>
+                        <BiEditAlt
+                           size={18}
+                           onClick={() => setIsAddingBio(true)}
+                           className="cursor-pointer"
+                        />
+                     </div>
                   )}
+
                   <div className="absolute right-6 bottom-6">
-                     <NavLink
-                        to={"update-admin"}
+                     <Link
+                        to={"update"}
                         className="border border-blue-600 text-blue-600 text-sm font-semibold py-2 px-4 rounded hover:bg-blue-600 hover:text-white transition-colors duration-300"
                      >
                         Update
-                     </NavLink>
+                     </Link>
                   </div>
                </div>
             </div>
