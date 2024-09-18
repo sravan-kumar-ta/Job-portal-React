@@ -70,6 +70,11 @@ const updateExperience = async (data) => {
    return response.data;
 };
 
+const applyJob = async (data) => {
+   const response = await axiosInstance.post(`company/applications/`, data);
+   return response.data;
+};
+
 // --------------------
 // Custom Hooks
 // --------------------
@@ -239,6 +244,20 @@ const useUpdateExperienceMutation = () => {
    });
 };
 
+const useCreateApplicationMutation = () => {
+   const queryClient = useQueryClient();
+
+   return useMutation({
+      mutationFn: applyJob,
+      onSuccess: () => {
+         queryClient.invalidateQueries(["jobApplications"]);
+      },
+      onError: (err) => {
+         console.log(err);
+      },
+   });
+};
+
 export {
    useFetchJobsQuery,
    useFetchProfileQuery,
@@ -250,4 +269,5 @@ export {
    useCreateExperienceMutation,
    useDeleteExperienceMutation,
    useUpdateExperienceMutation,
+   useCreateApplicationMutation,
 };
