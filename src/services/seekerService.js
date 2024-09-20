@@ -70,6 +70,11 @@ const updateExperience = async (data) => {
    return response.data;
 };
 
+const fetchApplications = async () => {
+   const response = await axiosInstance.get("company/applications/");
+   return response.data;
+};
+
 const applyJob = async (data) => {
    const response = await axiosInstance.post(`company/applications/`, data);
    return response.data;
@@ -244,6 +249,14 @@ const useUpdateExperienceMutation = () => {
    });
 };
 
+const useFetchApplicationsQuery = () => {
+   return useQuery({
+      queryKey: ["jobApplications"],
+      queryFn: fetchApplications,
+      staleTime: 5 * 60 * 1000,
+   });
+};
+
 const useCreateApplicationMutation = () => {
    const queryClient = useQueryClient();
 
@@ -269,5 +282,6 @@ export {
    useCreateExperienceMutation,
    useDeleteExperienceMutation,
    useUpdateExperienceMutation,
+   useFetchApplicationsQuery,
    useCreateApplicationMutation,
 };

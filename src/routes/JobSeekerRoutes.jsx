@@ -2,10 +2,12 @@ import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "../components/ProtectedRoute";
 import Profile from "../pages/JobSeeker/Profile";
 import UpdateProfile from "../pages/JobSeeker/UpdateProfile";
+import AppliedJobs from "../pages/JobSeeker/AppliedJobs";
 
 const JobSeekerRoutesConfig = [
    { path: "profile", element: <Profile /> },
    { path: "profile/update", element: <UpdateProfile /> },
+   { path: "applied-jobs", element: <AppliedJobs /> },
 ];
 
 const JobSeekerRoutes = () => {

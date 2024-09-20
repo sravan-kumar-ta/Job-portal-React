@@ -20,6 +20,7 @@ const NavBar = () => {
          links.push({ href: "admin/dashboard", text: "Dashboard" });
       } else if (role === "job_seeker") {
          links.push({ href: "/", text: "Home" });
+         links.push({ href: "job_seeker/applied-jobs", text: "Jobs" });
          links.push({ href: "job_seeker/profile", text: "Profile" });
       } else if (role === "company") {
          links.push({ href: "/company/profile", text: "Profile" });
@@ -35,7 +36,7 @@ const NavBar = () => {
 
    return (
       <nav className="bg-gray-800 p-4 sticky top-0 z-50 shadow-xl">
-         <div className="container flex items-center justify-center">
+         <div className="container flex items-center justify-center mx-auto">
             <div className="flex-col">
                {links.map((link, index) => (
                   <NavLink
