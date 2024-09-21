@@ -41,6 +41,11 @@ const updateJob = async ({ jobId, jobData }) => {
    return response.data;
 };
 
+const fetchApplications = async () => {
+   const response = await axiosInstance.get("company/applications/");
+   return response.data;
+};
+
 // --------------------
 // Custom Hooks
 // --------------------
@@ -115,6 +120,14 @@ const useUpdateJobMutation = () => {
    });
 };
 
+const useFetchCompanyApplicationsQuery = () => {
+   return useQuery({
+      queryKey: ["CompanyJobApplications"],
+      queryFn: fetchApplications,
+      staleTime: 5 * 60 * 1000,
+   });
+};
+
 export {
    useFetchUserCompanyQuery,
    useUpdateCompanyMutation,
@@ -122,4 +135,5 @@ export {
    useFetchJobsbyCompanyQuery,
    useFetchJobQuery,
    useUpdateJobMutation,
+   useFetchCompanyApplicationsQuery,
 };
