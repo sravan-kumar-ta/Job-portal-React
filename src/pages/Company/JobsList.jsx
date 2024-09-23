@@ -70,7 +70,7 @@ const JobsList = () => {
                            </div>
                            <div className="mr-6">
                               <Link
-                                 to={"applications"}
+                                 to={`applications/${job.id}`}
                                  className="bg-sky-500 text-white px-2 rounded-md text-sm font-semibold shadow-sm hover:tracking-widest hover:scale-110 ease-in duration-300"
                               >
                                  View

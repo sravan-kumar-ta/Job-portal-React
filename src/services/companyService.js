@@ -41,8 +41,21 @@ const updateJob = async ({ jobId, jobData }) => {
    return response.data;
 };
 
-const fetchApplications = async () => {
-   const response = await axiosInstance.get("company/applications/");
+const fetchApplicationsByJob = async (jobID) => {
+   const response = await axiosInstance.get(
+      "company/applications/list_by_job/",
+      {
+         params: { jobID },
+      }
+   );
+   return response.data;
+};
+
+const updateApplication = async ({ id, data }) => {
+   const response = await axiosInstance.patch(
+      `company/applications/${id}/`,
+      data
+   );
    return response.data;
 };
 
@@ -120,11 +133,42 @@ const useUpdateJobMutation = () => {
    });
 };
 
-const useFetchCompanyApplicationsQuery = () => {
+const useApplicationsByJobQuery = (jobID) => {
    return useQuery({
-      queryKey: ["CompanyJobApplications"],
-      queryFn: fetchApplications,
+      queryKey: ["applications", jobID],
+      queryFn: () => fetchApplicationsByJob(jobID),
+      enabled: !!jobID,
       staleTime: 5 * 60 * 1000,
+   });
+};
+
+const useUpdateApplicationMutation = (jobID) => {
+   const queryClient = useQueryClient();
+
+   return useMutation({
+      mutationFn: updateApplication,
+      
+      onMutate: async ({ id, data }) => {
+         await queryClient.cancelQueries(["applications", jobID]);
+         const previousApplications = queryClient.getQueryData(["applications", jobID]);
+         
+         queryClient.setQueryData(["applications", jobID], (oldApplications) => {
+            return oldApplications.map((application) =>
+               application.id === id ? { ...application, ...data } : application
+            );
+         });
+         
+         return { previousApplications };
+      },
+
+      onSuccess: (data) => {
+         // console.log("successs", data);
+      },
+      
+      onError: (err, variables, context) => {
+         queryClient.setQueryData(["applications", jobID], context.previousApplications);
+         console.error("error", err);
+      },
    });
 };
 
@@ -135,5 +179,6 @@ export {
    useFetchJobsbyCompanyQuery,
    useFetchJobQuery,
    useUpdateJobMutation,
-   useFetchCompanyApplicationsQuery,
+   useApplicationsByJobQuery,
+   useUpdateApplicationMutation,
 };

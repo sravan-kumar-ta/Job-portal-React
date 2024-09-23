@@ -7,7 +7,7 @@ import Applications from "../pages/Company/Applications";
 const companyRoutesConfig = [
    { path: "profile", element: <CompanyProfile /> },
    { path: "jobs", element: <JobsList /> },
-   { path: "jobs/applications", element: <Applications /> },
+   { path: "jobs/applications/:jobID", element: <Applications /> },
 ];
 
 const CompanyRoutes = () => {
