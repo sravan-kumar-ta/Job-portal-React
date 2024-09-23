@@ -8,8 +8,13 @@ import ApplicantSkeleton from "../../components/company/skeletons/ApplicantSkele
 
 const ApplicantsList = () => {
    const { jobID } = useParams();
-   const { data, isLoading, error } = useApplicationsByJobQuery(jobID);
    const [application, setApplication] = useState();
+   const [showDropdown, setShowDropdown] = useState(false);
+   const [filterStatus, setFilterStatus] = useState("all");
+   const { data, isLoading, error } = useApplicationsByJobQuery(
+      jobID,
+      filterStatus
+   );
 
    if (error) return <p>Error: {error.message}</p>;
 
@@ -21,6 +26,11 @@ const ApplicantsList = () => {
       const formattedDate = `${day} ${month} ${year}`;
 
       return formattedDate;
+   };
+
+   const handleFilter = (status) => {
+      setFilterStatus(status);
+      setShowDropdown(false);
    };
 
    return (
@@ -42,9 +52,48 @@ const ApplicantsList = () => {
                      <th scope="col" className="px-6 py-3 text-center">
                         Application Date
                      </th>
-                     <th scope="col" className="px-6 py-3 text-center">
-                        Status
-                     </th>
+                     <div className="flex justify-center items-center py-3">
+                        <th className="">Status</th>
+                        <div className="relative">
+                           <button
+                              className="text-gray-600 hover:bg-gray-200 pl-1 pr-2"
+                              id="filterButton"
+                              onClick={() => setShowDropdown(!showDropdown)}
+                           >
+                              ▼
+                           </button>
+                           {showDropdown && (
+                              <div className="absolute capitalize right-0 mt-2 w-24 bg-white border border-gray-300 shadow-md z-10 rounded-sm">
+                                 <ul className="py-1 text-sm text-gray-700">
+                                    <li
+                                       className="block px-4 py-2 hover:bg-gray-100 cursor-pointer tracking-wider"
+                                       onClick={() => handleFilter("all")}
+                                    >
+                                       All
+                                    </li>
+                                    <li
+                                       className="block px-4 py-2 hover:bg-gray-100 cursor-pointer tracking-wider"
+                                       onClick={() => handleFilter("accepted")}
+                                    >
+                                       Accepted
+                                    </li>
+                                    <li
+                                       className="block px-4 py-2 hover:bg-gray-100 cursor-pointer tracking-wider"
+                                       onClick={() => handleFilter("rejected")}
+                                    >
+                                       Rejected
+                                    </li>
+                                    <li
+                                       className="block px-4 py-2 hover:bg-gray-100 cursor-pointer tracking-wider"
+                                       onClick={() => handleFilter("pending")}
+                                    >
+                                       Pending
+                                    </li>
+                                 </ul>
+                              </div>
+                           )}
+                        </div>
+                     </div>
                      <th scope="col" className="px-6 py-3 text-center">
                         Action
                      </th>
@@ -65,6 +114,15 @@ const ApplicantsList = () => {
                            </tr>
                         ))}
                      </>
+                  ) : data.length === 0 ? (
+                     <tr className="bg-white border-b">
+                        <td
+                           className="px-6 py-4 text-center text-amber-500 font-semibold tracking-widest"
+                           colSpan={5}
+                        >
+                           There are no applications to display.
+                        </td>
+                     </tr>
                   ) : (
                      data.map((application, index) => (
                         <tr key={application.id} className="bg-white border-b">

@@ -41,11 +41,11 @@ const updateJob = async ({ jobId, jobData }) => {
    return response.data;
 };
 
-const fetchApplicationsByJob = async (jobID) => {
+const fetchFilteredApplications = async (jobID, status) => {
    const response = await axiosInstance.get(
-      "company/applications/list_by_job/",
+      "company/applications/filter_applications/",
       {
-         params: { jobID },
+         params: { jobID, status },
       }
    );
    return response.data;
@@ -133,10 +133,10 @@ const useUpdateJobMutation = () => {
    });
 };
 
-const useApplicationsByJobQuery = (jobID) => {
+const useApplicationsByJobQuery = (jobID, status) => {
    return useQuery({
-      queryKey: ["applications", jobID],
-      queryFn: () => fetchApplicationsByJob(jobID),
+      queryKey: ["applications", jobID, status],
+      queryFn: () => fetchFilteredApplications(jobID, status),
       enabled: !!jobID,
       staleTime: 5 * 60 * 1000,
    });
@@ -147,26 +147,37 @@ const useUpdateApplicationMutation = (jobID) => {
 
    return useMutation({
       mutationFn: updateApplication,
-      
+
       onMutate: async ({ id, data }) => {
          await queryClient.cancelQueries(["applications", jobID]);
-         const previousApplications = queryClient.getQueryData(["applications", jobID]);
-         
-         queryClient.setQueryData(["applications", jobID], (oldApplications) => {
-            return oldApplications.map((application) =>
-               application.id === id ? { ...application, ...data } : application
-            );
-         });
-         
+         const previousApplications = queryClient.getQueryData([
+            "applications",
+            jobID,
+         ]);
+
+         queryClient.setQueryData(
+            ["applications", jobID],
+            (oldApplications) => {
+               return oldApplications.map((application) =>
+                  application.id === id
+                     ? { ...application, ...data }
+                     : application
+               );
+            }
+         );
+
          return { previousApplications };
       },
 
       onSuccess: (data) => {
          // console.log("successs", data);
       },
-      
+
       onError: (err, variables, context) => {
-         queryClient.setQueryData(["applications", jobID], context.previousApplications);
+         queryClient.setQueryData(
+            ["applications", jobID],
+            context.previousApplications
+         );
          console.error("error", err);
       },
    });
