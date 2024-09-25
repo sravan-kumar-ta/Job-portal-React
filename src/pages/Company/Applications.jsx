@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { useApplicationsByJobQuery } from "../../services/companyService";
+import { useFilteredApplicationsQuery } from "../../services/companyService";
 import { useParams } from "react-router-dom";
 import Applicant from "./Applicant";
 import ApplicantSkeleton from "../../components/company/skeletons/ApplicantSkeleton";
@@ -11,7 +11,7 @@ const ApplicantsList = () => {
    const [application, setApplication] = useState();
    const [showDropdown, setShowDropdown] = useState(false);
    const [filterStatus, setFilterStatus] = useState("all");
-   const { data, isLoading, error } = useApplicationsByJobQuery(
+   const { data, isLoading, error } = useFilteredApplicationsQuery(
       jobID,
       filterStatus
    );
@@ -53,7 +53,7 @@ const ApplicantsList = () => {
                         Application Date
                      </th>
                      <div className="flex justify-center items-center py-3">
-                        <th className="">Status</th>
+                        <p className="font-bold">Status</p>
                         <div className="relative">
                            <button
                               className="text-gray-600 hover:bg-gray-200 pl-1 pr-2"

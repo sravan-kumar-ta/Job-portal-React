@@ -133,7 +133,7 @@ const useUpdateJobMutation = () => {
    });
 };
 
-const useApplicationsByJobQuery = (jobID, status) => {
+const useFilteredApplicationsQuery = (jobID, status) => {
    return useQuery({
       queryKey: ["applications", jobID, status],
       queryFn: () => fetchFilteredApplications(jobID, status),
@@ -142,43 +142,18 @@ const useApplicationsByJobQuery = (jobID, status) => {
    });
 };
 
-const useUpdateApplicationMutation = (jobID) => {
+const useUpdateApplicationMutation = (jobID, prevStatus, newStatus) => {
    const queryClient = useQueryClient();
 
    return useMutation({
       mutationFn: updateApplication,
-
-      onMutate: async ({ id, data }) => {
-         await queryClient.cancelQueries(["applications", jobID]);
-         const previousApplications = queryClient.getQueryData([
-            "applications",
-            jobID,
-         ]);
-
-         queryClient.setQueryData(
-            ["applications", jobID],
-            (oldApplications) => {
-               return oldApplications.map((application) =>
-                  application.id === id
-                     ? { ...application, ...data }
-                     : application
-               );
-            }
-         );
-
-         return { previousApplications };
+      onSuccess: () => {
+         queryClient.invalidateQueries(["applications", jobID, prevStatus]);
+         queryClient.invalidateQueries(["applications", jobID, newStatus]);
       },
 
-      onSuccess: (data) => {
-         // console.log("successs", data);
-      },
-
-      onError: (err, variables, context) => {
-         queryClient.setQueryData(
-            ["applications", jobID],
-            context.previousApplications
-         );
-         console.error("error", err);
+      onError: (err) => {
+         console.error("Error:", err);
       },
    });
 };
@@ -190,6 +165,6 @@ export {
    useFetchJobsbyCompanyQuery,
    useFetchJobQuery,
    useUpdateJobMutation,
-   useApplicationsByJobQuery,
+   useFilteredApplicationsQuery,
    useUpdateApplicationMutation,
 };

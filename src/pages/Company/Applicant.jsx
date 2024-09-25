@@ -5,21 +5,27 @@ import { useUpdateApplicationMutation } from "../../services/companyService";
 
 const Applicant = ({ application, setApplication, jobID }) => {
    const [status, setStatus] = useState(application.status);
-   const [isDirty, setIsDirty] = useState(false);
-   const { mutate } = useUpdateApplicationMutation(jobID);
+
+   const prevStatus = application.status;
+   const newStatus = status;
+
+   const { mutate } = useUpdateApplicationMutation(
+      jobID,
+      prevStatus,
+      newStatus
+   );
+
+   useEffect(() => {
+      setStatus(application.status);
+   }, [application]);
 
    const handleStatusChange = (newStatus) => {
       setStatus(newStatus);
-      setIsDirty(true);
    };
 
-   useEffect(() => {
-      return () => {
-         if (isDirty) {
-            mutate({ id: application.id, data: { status } });
-         }
-      };
-   }, [isDirty]);
+   const handleUpdate = () => {
+      mutate({ id: application.id, data: { status: newStatus } });
+   };
 
    return (
       <div className="shadow-lg bg-gray-200 px-5 lg:px-12 xl:px-20 py-5 text-gray-700 relative">
@@ -100,6 +106,12 @@ const Applicant = ({ application, setApplication, jobID }) => {
                      Reject
                   </label>
                </div>
+               <button
+                  onClick={handleUpdate}
+                  className="text-sm px-2 py-1 bg-sky-500 mt-4 text-white rounded-md hover:bg-blue-600"
+               >
+                  Update status
+               </button>
             </div>
          </div>
          <FaWindowClose

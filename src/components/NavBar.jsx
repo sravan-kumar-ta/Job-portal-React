@@ -20,7 +20,7 @@ const NavBar = () => {
          links.push({ href: "admin/dashboard", text: "Dashboard" });
       } else if (role === "job_seeker") {
          links.push({ href: "/", text: "Home" });
-         links.push({ href: "job_seeker/applied-jobs", text: "Jobs" });
+         links.push({ href: "job_seeker/applied-jobs", text: "Applications" });
          links.push({ href: "job_seeker/profile", text: "Profile" });
       } else if (role === "company") {
          links.push({ href: "/company/profile", text: "Profile" });
