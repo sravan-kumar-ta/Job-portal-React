@@ -80,6 +80,14 @@ const applyJob = async (data) => {
    return response.data;
 };
 
+const fetchFilteredJobs = async (params) => {
+   console.log("requesting...");
+   const response = await axiosInstance.get("company/jobs/", {
+      params: { ...params },
+   });
+   return response.data;
+};
+
 // --------------------
 // Custom Hooks
 // --------------------
@@ -271,6 +279,15 @@ const useCreateApplicationMutation = () => {
    });
 };
 
+const useFetchFilteredJobsQuery = (params) => {
+   return useQuery({
+      queryKey: ["filteredJobs", { ...params }],
+      queryFn: () => fetchFilteredJobs(params),
+      staleTime: 5 * 60 * 1000,
+      keepPreviousData: true,
+   });
+};
+
 export {
    useFetchJobsQuery,
    useFetchProfileQuery,
@@ -284,4 +301,5 @@ export {
    useUpdateExperienceMutation,
    useFetchApplicationsQuery,
    useCreateApplicationMutation,
+   useFetchFilteredJobsQuery,
 };
