@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useGetUserQuery, useLogout } from "../services/authService";
-import { useAuth } from "../context/AuthContext";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const NavBar = () => {
    const { mutateAsync: logout } = useLogout();
@@ -32,7 +33,16 @@ const NavBar = () => {
    }
 
    if (isLoading) {
-      return <div>loading..</div>;
+      return (
+         <nav className="bg-gray-800 p-4 sticky top-0 z-50 shadow-xl">
+            <div className="container flex items-center justify-center mx-auto">
+               <Skeleton width={55} height={25} className="mr-5" />
+               <Skeleton width={55} height={25} className="mr-5" />
+               <Skeleton width={55} height={25} className="mr-5" />
+               <Skeleton width={55} height={25} className="mr-5" />
+            </div>
+         </nav>
+      );
    }
 
    return (
