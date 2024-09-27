@@ -8,6 +8,7 @@ const Home = () => {
    const [minSalary, setMinSalary] = useState("");
    const [maxSalary, setMaxSalary] = useState("");
    const [empType, setEmpType] = useState("");
+   const [sortBy, setSortBy] = useState("");
    const [page, setPage] = useState(1);
    const [allData, setAllData] = useState([]);
 
@@ -16,6 +17,7 @@ const Home = () => {
       min_salary: minSalary,
       max_salary: maxSalary,
       employment_type: empType,
+      ordering: sortBy,
       page,
    };
 
@@ -102,6 +104,20 @@ const Home = () => {
                <option value="Freelance">Freelance</option>
                <option value="Contract">Contract</option>
                <option value="Internship">Internship</option>
+            </select>
+            <select
+               value={sortBy}
+               onChange={(e) => {
+                  setSortBy(e.target.value);
+                  setPage(1);
+               }}
+               className="mx-2 px-2 outline-none border border-sky-200 focus:border-indigo-500 rounded-sm py-1 font-semibold"
+            >
+               <option value="">Sort By</option>
+               <option value="salary">Salary (Low to High)</option>
+               <option value="-salary">Salary (High to Low)</option>
+               <option value="date_posted">Date Posted (Oldest)</option>
+               <option value="-date_posted">Date Posted (Newest)</option>
             </select>
          </div>
          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-6 md:gap-y-20 p-6 mt-4 mx-0 lg:mx-20">
