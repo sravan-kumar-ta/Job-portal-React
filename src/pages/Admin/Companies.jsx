@@ -1,15 +1,23 @@
 import React from "react";
 import { useFetchCompaniesQuery } from "../../services/adminService";
+import { Link } from "react-router-dom";
 
 const Companies = () => {
    const { data, isLoading, isError, error } = useFetchCompaniesQuery();
-   
+
    if (isLoading) {
       return <div>Loading...</div>;
    }
    if (isError) {
       return <div>Error: {error.message}</div>;
    }
+
+   const slugify = (name) => {
+      return name
+         .toLowerCase()
+         .replace(/ /g, "-")
+         .replace(/[^\w-]+/g, "");
+   };
 
    return (
       <div className="md:w-2/3 mx-auto mt-4 bg-white">
@@ -35,15 +43,19 @@ const Companies = () => {
                            {company.location}
                         </td>
                         <td className="px-4 py-2 border-b">
-                           {company.established_date || "--"}
+                           {company.established_date || "--"}  
                         </td>
                         <td className="px-4 py-2 border-b">
                            {company.is_active ? "Active" : "Not active"}
                         </td>
                         <td className="px-4 py-2 border-b">
-                           <button className="bg-blue-500 text-white px-4 py-1 rounded">
+                           <Link
+                              to={`${slugify(company.title)}/profile`}
+                              state={{ company }}
+                              className="bg-blue-500 text-white px-4 py-1 rounded"
+                           >
                               View
-                           </button>
+                           </Link>
                         </td>
                      </tr>
                   ))}

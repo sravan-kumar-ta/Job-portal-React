@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "./_axiosInstance";
 
 // --------------------
@@ -19,6 +19,13 @@ const fetchCompanies = async () => {
 
 const fetchCounts = async () => {
    const response = await axiosInstance.get("admin/dashboard/");
+   return response.data;
+};
+
+const updateCompanyStatus = async (data) => {
+   const response = await axiosInstance.patch("admin/company-approval/", {
+      ...data,
+   });
    return response.data;
 };
 
@@ -50,4 +57,41 @@ const useFetchCountQuery = () => {
    });
 };
 
-export { useFetchJobSeekersQuery, useFetchCompaniesQuery, useFetchCountQuery };
+const useUpdateCompanyStatusMutation = () => {
+   const queryClient = useQueryClient();
+
+   return useMutation({
+      mutationFn: updateCompanyStatus,
+      onMutate: async (data) => {
+         const { company_id, is_active } = data;
+
+         const previousCompanies = queryClient.getQueryData(
+            ["companies"] || []
+         );
+
+         queryClient.setQueryData(["companies"], (oldCompanies = []) =>
+            oldCompanies.map((company) =>
+               company.id === company_id ? { ...company, is_active } : company
+            )
+         );
+
+         return { previousCompanies };
+      },
+      onError: (err, data, context) => {
+         console.error("Error updating company status:", err);
+         if (context?.previousCompanies) {
+            queryClient.setQueryData(["companies"], context.previousCompanies);
+         }
+      },
+      onSuccess: () => {
+         // queryClient.invalidateQueries(['companies']);
+      },
+   });
+};
+
+export {
+   useFetchJobSeekersQuery,
+   useFetchCompaniesQuery,
+   useFetchCountQuery,
+   useUpdateCompanyStatusMutation,
+};
