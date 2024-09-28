@@ -1,31 +1,47 @@
 import React, { useEffect, useState } from "react";
 import { useFetchJobSeekersQuery } from "../../services/adminService";
 import LoadMoreButton from "../../components/admin/LoadMoreButton";
+import SeekersSkeleton from "../../components/admin/skeletons/SeekersSkeleton";
 
 const JobSeekers = () => {
    const [page, setPage] = useState(1);
    const [allData, setAllData] = useState([]);
-   const [loadMore, setLoadMore] = useState(false);
-   const [hasFetched, setHasFetched] = useState(false);
-   const [isLoading, setIsLoading] = useState(false);
 
-   const { isError, error, refetch } = useFetchJobSeekersQuery({ page });
+   const { data, isLoading, error } = useFetchJobSeekersQuery({
+      page,
+   });
+
+   if (error) return <div>{error}</div>;
+
+
+   const removeDuplicates = (seekers) => {
+      const uniqueSeekers = [];
+      const seekerIds = new Set();
+
+      seekers.forEach((seeker) => {
+         if (!seekerIds.has(seeker.id)) {
+            uniqueSeekers.push(seeker);
+            seekerIds.add(seeker.id);
+         }
+      });
+
+      return uniqueSeekers;
+   };
 
    useEffect(() => {
-      if (!hasFetched) {
-         setIsLoading(true);
-         refetch().then((res) => {
-            setAllData([...allData, ...res.data.results]);
-            setLoadMore(Boolean(res.data.next));
-         });
-         setHasFetched(true);
+      if (data && data.results) {
+         if (page === 1) {
+            setAllData(removeDuplicates(data.results));
+         } else {
+            setAllData((prevData) =>
+               removeDuplicates([...prevData, ...data.results])
+            );
+         }
       }
-      setIsLoading(false);
-   }, [page]);
+   }, [data, page]);
 
    const handleLoadMore = () => {
-      setPage(page + 1);
-      setHasFetched(false);
+      setPage((prev) => prev + 1);
    };
 
    return (
@@ -64,7 +80,7 @@ const JobSeekers = () => {
                   ))}
                   <tr className="text-center">
                      <td colSpan={5} className="py-3">
-                        {loadMore && (
+                        {data?.next && (
                            <LoadMoreButton
                               onClick={handleLoadMore}
                               isLoading={isLoading}
@@ -72,6 +88,8 @@ const JobSeekers = () => {
                         )}
                      </td>
                   </tr>
+
+                  {isLoading && <SeekersSkeleton />}
                </tbody>
             </table>
          </div>
