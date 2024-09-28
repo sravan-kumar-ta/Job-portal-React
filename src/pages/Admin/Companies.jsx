@@ -1,13 +1,11 @@
 import React from "react";
 import { useFetchCompaniesQuery } from "../../services/adminService";
 import { Link } from "react-router-dom";
+import CompaniesSkeleton from "../../components/admin/skeletons/CompaniesSkeleton";
 
 const Companies = () => {
    const { data, isLoading, isError, error } = useFetchCompaniesQuery();
-
-   if (isLoading) {
-      return <div>Loading...</div>;
-   }
+   
    if (isError) {
       return <div>Error: {error.message}</div>;
    }
@@ -36,29 +34,43 @@ const Companies = () => {
                   </tr>
                </thead>
                <tbody align="center">
-                  {data.map((company) => (
-                     <tr key={company.id}>
-                        <td className="px-4 py-2 border-b">{company.title}</td>
-                        <td className="px-4 py-2 border-b">
-                           {company.location}
-                        </td>
-                        <td className="px-4 py-2 border-b">
-                           {company.established_date || "--"}  
-                        </td>
-                        <td className="px-4 py-2 border-b">
-                           {company.is_active ? "Active" : "Not active"}
-                        </td>
-                        <td className="px-4 py-2 border-b">
-                           <Link
-                              to={`${slugify(company.title)}/profile`}
-                              state={{ company }}
-                              className="bg-blue-500 text-white px-4 py-1 rounded"
-                           >
-                              View
-                           </Link>
-                        </td>
-                     </tr>
-                  ))}
+                  {isLoading ? (
+                     <CompaniesSkeleton />
+                  ) : (
+                     data.map((company) => (
+                        <tr key={company.id}>
+                           <td className="px-4 py-2 border-b">
+                              {company.title}
+                           </td>
+                           <td className="px-4 py-2 border-b">
+                              {company.location}
+                           </td>
+                           <td className="px-4 py-2 border-b">
+                              {company.established_date || "--"}
+                           </td>
+                           <td className="px-4 py-2 border-b">
+                              {company.is_active ? (
+                                 <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">
+                                    Approved
+                                 </span>
+                              ) : (
+                                 <span className="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">
+                                    Pending
+                                 </span>
+                              )}
+                           </td>
+                           <td className="px-4 py-2 border-b">
+                              <Link
+                                 to={`${slugify(company.title)}/profile`}
+                                 state={{ company }}
+                                 className="bg-blue-500 text-white px-4 py-1 rounded"
+                              >
+                                 View
+                              </Link>
+                           </td>
+                        </tr>
+                     ))
+                  )}
                </tbody>
             </table>
          </div>
