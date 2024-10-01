@@ -1,5 +1,6 @@
 import React from "react";
-import { FaUser, FaBuilding, FaUserCog } from "react-icons/fa";
+import { FaUser, FaBuilding, FaUserCog, FaSuitcase } from "react-icons/fa";
+import { IoDocumentText } from "react-icons/io5";
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useFetchCountQuery } from "../../services/adminService";
@@ -58,7 +59,7 @@ const AdminDashboard = () => {
                {/* Job Seekers Section */}
                <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-6">
                   <div className="flex items-center mb-4">
-                     <FaUser className="text-blue-600 text-3xl mr-4" />
+                     <FaUser className="text-green-600 text-3xl mr-4" />
                      <h2 className="text-2xl font-semibold text-gray-800">
                         Job Seekers
                      </h2>
@@ -87,6 +88,52 @@ const AdminDashboard = () => {
                   <div className="flex justify-between items-center">
                      <p className="text-gray-600 text-lg">
                         {data.companies} registered
+                     </p>
+
+                     <Link
+                        to={"companies"}
+                        className="border border-blue-600 text-blue-600 text-sm font-semibold py-2 px-4 rounded hover:bg-blue-600 hover:text-white transition-colors duration-300"
+                     >
+                        View all
+                     </Link>
+                  </div>
+               </div>
+            </div>
+
+            {/* Jobs and Applications Sections */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+               {/* Jobs Section */}
+               <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-6">
+                  <div className="flex items-center mb-4">
+                     <FaSuitcase className="text-green-600 text-3xl mr-4" />
+                     <h2 className="text-2xl font-semibold text-gray-800">
+                        Jobs
+                     </h2>
+                  </div>
+                  <div className="flex justify-between items-center">
+                     <p className="text-gray-600 text-lg">
+                        {data.jobs} created
+                     </p>
+                     <NavLink
+                        to={"job-seekers"}
+                        className="border border-blue-600 text-blue-600 text-sm font-semibold py-2 px-4 rounded hover:bg-blue-600 hover:text-white transition-colors duration-300"
+                     >
+                        View all
+                     </NavLink>
+                  </div>
+               </div>
+
+               {/* Companies Section */}
+               <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-6">
+                  <div className="flex items-center mb-4">
+                     <IoDocumentText className="text-green-600 text-3xl mr-4" />
+                     <h2 className="text-2xl font-semibold text-gray-800">
+                        Applications
+                     </h2>
+                  </div>
+                  <div className="flex justify-between items-center">
+                     <p className="text-gray-600 text-lg">
+                        {data.applications} sent
                      </p>
 
                      <Link

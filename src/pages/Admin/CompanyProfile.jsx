@@ -22,7 +22,7 @@ const CompanyProfile = () => {
    };
 
    return (
-      <div className="lg:w-3/5 xl:w-2/5 mx-auto p-5 mt-4 border border-blue-500">
+      <div className="lg:w-3/5 xl:w-2/5 mx-auto bg-white rounded-lg shadow-lg p-5 mt-4">
          <div className="flex items-end">
             <h2 className="text-3xl tracking-wider font-bold text-slate-700">
                {company.title}

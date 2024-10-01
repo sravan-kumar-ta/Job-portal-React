@@ -10,7 +10,7 @@ const JobSeekers = () => {
    const { data, isLoading, error } = useFetchJobSeekersQuery({
       page,
    });
-
+   
    if (error) return <div>{error}</div>;
 
 
@@ -56,7 +56,6 @@ const JobSeekers = () => {
                      <th className="px-4 py-2 border-b">Name</th>
                      <th className="px-4 py-2 border-b">Username</th>
                      <th className="px-4 py-2 border-b">Email</th>
-                     <th className="px-4 py-2 border-b">Experience</th>
                      <th className="px-4 py-2 border-b">Action</th>
                   </tr>
                </thead>
@@ -70,7 +69,6 @@ const JobSeekers = () => {
                            {seeker.username}
                         </td>
                         <td className="px-4 py-2 border-b">{seeker.email}</td>
-                        <td className="px-4 py-2 border-b">Experience</td>
                         <td className="px-4 py-2 border-b">
                            <button className="bg-blue-500 text-white px-4 py-1 rounded">
                               View
