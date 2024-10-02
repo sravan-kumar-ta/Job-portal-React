@@ -115,7 +115,7 @@ const AdminDashboard = () => {
                         {data.jobs} created
                      </p>
                      <NavLink
-                        to={"job-seekers"}
+                        to={"jobs"}
                         className="border border-blue-600 text-blue-600 text-sm font-semibold py-2 px-4 rounded hover:bg-blue-600 hover:text-white transition-colors duration-300"
                      >
                         View all

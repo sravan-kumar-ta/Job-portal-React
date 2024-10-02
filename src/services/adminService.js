@@ -29,6 +29,13 @@ const updateCompanyStatus = async (data) => {
    return response.data;
 };
 
+const fetchJobs = async (page) => {
+   const response = await axiosInstance.get("admin/jobs/", {
+      params: { page },
+   });
+   return response.data;
+};
+
 // --------------------
 // Custom Hooks
 // --------------------
@@ -89,9 +96,18 @@ const useUpdateCompanyStatusMutation = () => {
    });
 };
 
+const useFetchJobsQuery = (page) => {
+   return useQuery({
+      queryKey: ["admin-jobs", page],
+      queryFn: () => fetchJobs(page),
+      staleTime: 5 * 60 * 1000,
+   });
+};
+
 export {
    useFetchJobSeekersQuery,
    useFetchCompaniesQuery,
    useFetchCountQuery,
    useUpdateCompanyStatusMutation,
+   useFetchJobsQuery,
 };

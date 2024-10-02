@@ -5,6 +5,7 @@ import UpdateUser from "../pages/UpdateUser";
 import JobSeekers from "../pages/Admin/JobSeekers";
 import Companies from "../pages/Admin/companies";
 import CompanyProfile from "../pages/Admin/CompanyProfile";
+import Jobs from "../pages/Admin/Jobs";
 
 const adminRoutesConfig = [
    { path: "dashboard", element: <AdminDashboard /> },
@@ -12,6 +13,7 @@ const adminRoutesConfig = [
    { path: "dashboard/job-seekers", element: <JobSeekers /> },
    { path: "dashboard/companies", element: <Companies /> },
    { path: "dashboard/companies/:companyName/profile", element: <CompanyProfile /> },
+   { path: "dashboard/jobs", element: <Jobs /> },
 ];
 
 const AdminRoutes = () => {
