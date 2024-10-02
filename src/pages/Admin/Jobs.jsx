@@ -5,22 +5,30 @@ import LoadMoreButton from "../../components/admin/LoadMoreButton";
 const Jobs = () => {
    const [page, setPage] = useState(1);
    const [allData, setAllData] = useState([]);
+   const [companies, setCompanies] = useState([]);
+   const [selectedCompany, setSelectedCompany] = useState("");
 
-   const { data, isLoading, isError, error } = useFetchJobsQuery(page);
+   const { data, isLoading, isError, error } = useFetchJobsQuery(
+      page,
+      selectedCompany
+   );
 
    if (error) return <div>{error}</div>;
 
    const removeDuplicates = (jobs) => {
       const uniqueJobs = [];
       const jobIds = new Set();
+      const uniqueCompanies = new Set(companies);
 
       jobs.forEach((job) => {
          if (!jobIds.has(job.id)) {
             uniqueJobs.push(job);
             jobIds.add(job.id);
          }
+         uniqueCompanies.add(job.company.title);
       });
 
+      setCompanies(Array.from(uniqueCompanies));
       return uniqueJobs;
    };
 
@@ -46,6 +54,11 @@ const Jobs = () => {
       setPage((prev) => prev + 1);
    };
 
+   const handleCompanySelect = (event) => {
+      setSelectedCompany(event.target.value);
+      setPage(1);
+   };
+
    return (
       <div className="md:w-2/3 mx-auto mt-4 bg-white">
          <h2 className="text-2xl font-bold text-center mb-4 sticky top-0 bg-white py-2 z-10">
@@ -56,7 +69,19 @@ const Jobs = () => {
                <thead className="sticky top-0 bg-gray-200 z-10">
                   <tr>
                      <th className="px-4 py-2 border-b text-left">Title</th>
-                     <th className="px-4 py-2 border-b text-center">Company</th>
+                     <td className="px-4 py-2 border-b flex justify-center">
+                        <select
+                           onChange={handleCompanySelect}
+                           className="bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2 py-1"
+                        >
+                           <option value="">All Companies</option>
+                           {companies.map((company, index) => (
+                              <option key={index} value={company}>
+                                 {company}
+                              </option>
+                           ))}
+                        </select>
+                     </td>
                      <th className="px-4 py-2 border-b text-right">Salary</th>
                      <th className="px-4 py-2 border-b text-center">Date</th>
                      <th className="px-4 py-2 border-b">Vaccancy</th>
