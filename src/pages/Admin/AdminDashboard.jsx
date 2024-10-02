@@ -137,7 +137,7 @@ const AdminDashboard = () => {
                      </p>
 
                      <Link
-                        to={"companies"}
+                        to={"application"}
                         className="border border-blue-600 text-blue-600 text-sm font-semibold py-2 px-4 rounded hover:bg-blue-600 hover:text-white transition-colors duration-300"
                      >
                         View all
