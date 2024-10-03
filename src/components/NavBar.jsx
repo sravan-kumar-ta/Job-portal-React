@@ -5,24 +5,21 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 const NavBar = () => {
    const { mutateAsync: logout } = useLogout();
-   // const { user } = useAuth();
    const { data: user, isLoading } = useGetUserQuery();
 
    const handleLogout = () => {
       logout();
    };
 
-   // let links = [{ href: "/", text: "Home" }];
    let links = [];
-
    const role = user?.role;
    if (role) {
       if (role === "admin") {
-         links.push({ href: "admin/dashboard", text: "Dashboard" });
+         links.push({ href: "/admin/dashboard", text: "Dashboard" });
       } else if (role === "job_seeker") {
          links.push({ href: "/", text: "Home" });
-         links.push({ href: "job_seeker/applied-jobs", text: "Applications" });
-         links.push({ href: "job_seeker/profile", text: "Profile" });
+         links.push({ href: "/job_seeker/applied-jobs", text: "Applications" });
+         links.push({ href: "/job_seeker/profile", text: "Profile" });
       } else if (role === "company") {
          links.push({ href: "/company/profile", text: "Profile" });
          links.push({ href: "/company/jobs", text: "Jobs" });
@@ -53,8 +50,10 @@ const NavBar = () => {
                   <NavLink
                      key={index}
                      to={link.href}
-                     className={
-                        "text-white hover:bg-gray-700 px-3 py-2 rounded bg-gray-900 mx-1 md:mx-5"
+                     className={({ isActive }) =>
+                        isActive
+                           ? "text-white bg-blue-500 px-3 py-2 rounded mx-1 md:mx-5"
+                           : "text-white hover:bg-gray-700 px-3 py-2 rounded bg-gray-900 mx-1 md:mx-5"
                      }
                   >
                      {link.text}
