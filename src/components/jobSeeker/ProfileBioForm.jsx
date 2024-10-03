@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useUpdateProfileMutation } from "../../services/seekerService";
 
-const ProfileBioForm = ({ setIsAddingBio, profile }) => {
+const ProfileBioForm = ({ setIsAddingBio, profile = null }) => {
    const { mutate } = useUpdateProfileMutation();
    const initialValues = {
       bio: profile.bio || "",

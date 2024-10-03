@@ -61,7 +61,7 @@ const AppliedJobs = () => {
                               </tr>
                            ))}
                         </>
-                     ) : (
+                     ) : data?.length > 0 ? (
                         data.map((job, index) => (
                            <tr key={job.id} className="bg-white border-b">
                               <th
@@ -103,6 +103,15 @@ const AppliedJobs = () => {
                               </td>
                            </tr>
                         ))
+                     ) : (
+                        <tr>
+                           <td
+                              colSpan={5}
+                              className="py-5 text-center tracking-wider font-bold text-amber-900"
+                           >
+                              No jobs applied yet.
+                           </td>
+                        </tr>
                      )}
                   </tbody>
                </table>

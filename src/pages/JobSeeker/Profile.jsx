@@ -82,11 +82,19 @@ const Profile = () => {
                         />
                      </div>
                   ) : (
-                     <img
-                        className="w-32 h-32 rounded-full my-auto"
-                        src="https://loremflickr.com/320/320/girl"
-                        alt="Profile photo"
-                     />
+                     <div className="relative">
+                        <img
+                           className="w-32 h-32 rounded-full my-auto"
+                           src="https://loremflickr.com/320/320/girl"
+                           alt="Profile photo"
+                        />
+
+                        <BiEditAlt
+                           size={18}
+                           onClick={() => setIsAddingPicture(true)}
+                           className="absolute bottom-1 right-1 cursor-pointer"
+                        />
+                     </div>
                   )}
                </>
 
@@ -131,13 +139,24 @@ const Profile = () => {
                      <>
                         <ProfileBioForm
                            setIsAddingBio={setIsAddingBio}
-                           profile={profile}
+                           profile={profile || ""}
                         />
                      </>
-                  ) : (
+                  ) : profile?.bio ? (
                      <div className="flex items-end">
                         <p className="mt-2 text-sm text-gray-900">
-                           {profile.bio || "Bio not added yet."}
+                           {profile.bio}
+                        </p>
+                        <BiEditAlt
+                           size={18}
+                           onClick={() => setIsAddingBio(true)}
+                           className="cursor-pointer"
+                        />
+                     </div>
+                  ) : (
+                     <div className="flex items-end">
+                        <p className="mt-2 text-sm text-red-600">
+                           Bio not added yet.
                         </p>
                         <BiEditAlt
                            size={18}
