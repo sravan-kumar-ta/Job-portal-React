@@ -1,5 +1,5 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import InputField from "../InputField";
 import SubmitButton from "../SubmitButton";
 import { JobFormValidationSchema } from "../../utils/validationSchemas";
@@ -12,16 +12,18 @@ const initialValues = {
    vacancy: "",
    description: "",
    employment_type: "",
-   last_date_to_apply: ""
+   last_date_to_apply: "",
 };
 
 const JobForm = ({ onClick }) => {
+   const [permission, setPermission] = useState(true);
    const createJobMutation = useCreateJobMutation();
 
    const handleSubmit = (
       values,
       { setSubmitting, setFieldError, resetForm }
    ) => {
+      setPermission(true);
       const filteredValues = Object.fromEntries(
          Object.entries(values).map(([key, value]) => [
             key,
@@ -41,6 +43,8 @@ const JobForm = ({ onClick }) => {
                   setFieldError(field, errors[field][0]);
                });
             }
+
+            if (error.response.status === 403) setPermission(false);
          },
       });
 
@@ -57,6 +61,19 @@ const JobForm = ({ onClick }) => {
             <Form className="max-w-lg mx-auto p-6 pt-1 bg-white rounded shadow-md mt-6 relative">
                <h1 className="text-center text-2xl my-4 font-bold">Add Job</h1>
                <hr />
+
+               {!permission && (
+                  <div className="text-red-400 text-center mb-4">
+                     <span className="font-bold tracking-wide">
+                        Permission denied.
+                     </span>{" "}
+                     <br />
+                     <span className="tracking-wide">
+                        The company approval is pending at the Admin.
+                     </span>
+                  </div>
+               )}
+
                <div className="flex space-x-11 mt-2">
                   <InputField
                      name="title"
