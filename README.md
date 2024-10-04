@@ -64,27 +64,23 @@ Backend (Django) 👉 [Job Portal Backend](https://github.com/sravan-kumar-ta/Jo
 ## Screenshots
 <table>
     <tr>
-        <td align="center" style="padding: 20px 30px;">
-            App.jsx <br>
+        <td style="padding: 20px 30px;">
             <img height="300"
                 src="https://github.com/user-attachments/assets/c87b3b08-6249-48e5-b392-8e839a89ac1b">
         </td>
-        <td align="center" style="padding: 20px 30px;">
-            AdminRoutes.jsx <br>
+        <td style="padding: 20px 30px;">
             <img height="300"
                 src="https://github.com/user-attachments/assets/1fd18b4e-0177-4623-9ecc-78b99e819759">
         </td>
     </tr>
     <tr>
-        <td align="center" style="padding: 20px 30px;">
-            validationSchemas.jsx <br>
+        <td style="padding: 20px 30px;">
             <img height="300"
                 src="https://github.com/user-attachments/assets/46e50c9a-d894-4008-a12d-0f1c5819940c">
         </td>
-        <td align="center" style="padding: 20px 30px;">
-            seekerService.jsx <br>
+        <td style="padding: 20px 30px;">
             <img height="300"
-                src="https://github.com/user-attachments/assets/ee30f0a8-7348-4ab6-8381-24403a413884">
+                src="https://github.com/user-attachments/assets/8c55feb1-d911-4f93-af11-561d2225fefc">
         </td>
     </tr>
 </table>
