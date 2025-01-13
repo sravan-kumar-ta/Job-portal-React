@@ -3,7 +3,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import AdminDashboard from "../pages/Admin/AdminDashboard";
 import UpdateUser from "../pages/UpdateUser";
 import JobSeekers from "../pages/Admin/JobSeekers";
-import Companies from "../pages/Admin/companies";
+import Companies from "../pages/Admin/Companies";
 import CompanyProfile from "../pages/Admin/CompanyProfile";
 import Jobs from "../pages/Admin/Jobs";
 import Applications from "../pages/Admin/Applications";
